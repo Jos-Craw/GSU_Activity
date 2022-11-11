@@ -1,0 +1,35 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<div class="profile">
+	{{user.username }}
+	{% if user.avatar %}
+      <img class="avatar" src="{{ user.avatar.url }}"><br><br>
+    {% else %}
+      <img class="avatar" src="\static\news\user.png"><br><br>
+    {% endif %}
+	{{user.first_name}} {{user.last_name}}<br>
+	{{user.phone_num}}<br>
+	{% if user.faculty %}
+	{{user.get_faculty_display}}<br>
+	{% endif %}
+	{% if user.group %}
+	{{user.group}}
+	{% endif %}
+	<div>
+		<a href="{% url 'news:profile_change' %}"  class="link">Редактировать информацию профиля</a><br>
+		<a href="{% url 'news:password_change' %}"  class="link">Изменить пароль</a><br>
+		<a href="{% url 'news:profile_delete' %}"  class="link">Удалить аккаунт</a><br>
+	</div>
+	<div>
+		Ваши записи<br>
+		{% if posts %}
+			{% for post in posts %}
+				{{ post.id }} {{ post.content}}<br>	
+			{% endfor %}
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

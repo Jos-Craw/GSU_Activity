@@ -1,0 +1,48 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Трудовая и волонтерская деятельность{% endblock %}
+
+{% block content %}
+{% if posts %}
+{% for post in posts %}
+{% if post.tags == 'trud' %}
+	<div class="post">
+		<div class="post-author">
+			<div class="post-author-a">
+			    <div>
+					{% if post.tags == 'cult' %}
+					<a href="{% url 'news:cult' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% elif post.tags == 'sport' %}
+					<a href="{% url 'news:sport' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% elif post.tags == 'mass' %}
+					<a href="{% url 'news:mass' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% elif post.tags == 'trud' %}
+					<a href="{% url 'news:trud' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% endif %}
+				</div>
+			</div>
+			<div class="post-author-b">
+				<a href="{% url 'news:detail' pk=post.pk %}" class="link">⋮</a>
+			</div>
+		</div>
+		<div class="post-content">
+			{{ post.content}}<br>
+			{% if post.image %}
+				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
+			{% endif %}
+			{% if post.video %}
+				<video src="{{ post.video.url }}" class="media" controls="controls"></video><br>
+			{% endif %}
+			{% if post.audio %}
+				<audio src="{{ post.audio.url }}" controls="controls"></audio><br>
+			{% endif %}
+			{% if post.file %}
+				<a href='{{ post.file.url }}' target="-blank" class="file">{{post.filename}}</a><br>
+			{% endif %}
+		</div>
+	</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+</div>
+{% endblock %}

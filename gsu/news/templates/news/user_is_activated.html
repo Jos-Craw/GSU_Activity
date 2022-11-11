@@ -1,0 +1,11 @@
+{% extends "layout/basic.html" %}
+
+
+{% block title %}Already activated{% endblock %}
+
+{% block content %}
+<div class="good">
+	This user has already been activated
+	<br><a href="{% url 'news:login' %}" class="link">Log in</a>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "layout/basic.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+{% if posts %}
+{% for post in posts %}
+	<div class="post">
+		<div class="post-author">
+			<div class="post-author-a">
+			    <div>
+			    	{% if post.tags == 'cult' %}
+					<a href="{% url 'news:cult' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% elif post.tags == 'sport' %}
+					<a href="{% url 'news:sport' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% elif post.tags == 'mass' %}
+					<a href="{% url 'news:mass' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% elif post.tags == 'trud' %}
+					<a href="{% url 'news:trud' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% endif %}
+					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}
+				</div>
+			</div>
+			<div class="post-author-b">
+				<a href="{% url 'news:detail' pk=post.pk %}" class="link">⋮</a>
+			</div>
+		</div>
+		<div class="post-content">
+			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+			{% if post.image %}
+				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
+			{% endif %}
+			Количество свободных мест: {{ post.mesta }}
+		</div>
+	</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endblock %}

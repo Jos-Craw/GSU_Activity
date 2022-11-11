@@ -1,0 +1,16 @@
+{% extends "layout/basic.html" %}
+
+{% load bootstrap4 %}
+
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+<div class="good">
+	Registration
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">Register</button>
+	</form>
+</div>
+{% endblock %}
