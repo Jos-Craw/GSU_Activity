@@ -3,7 +3,7 @@ from .models import Post, AdvUser, Comment
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, EmailForm
+from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -18,7 +18,7 @@ from django.conf import settings
 
 @login_required
 def index(request):
-    posts = Post.objects.all()
+    posts = Post.objects.all() #добавить фильтр по датам
     return render(request, 'news/index.html', {'posts': posts})
 
 @login_required
@@ -29,19 +29,27 @@ def profile(request):
 
 @login_required
 def detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    comments = Comment.objects.filter(post=pk)
-    initial = {'post': post.pk}
-    initial['author'] = request.user.first_name + ' ' + request.user.last_name
-    form_class = CommentForm
-    form = form_class(initial=initial)
-    if request.method == 'POST' or request.FILES:
-        c_form = form_class(request.POST, request.FILES)
-        if c_form.is_valid():
-            c_form.save()
-        else:
-            form = c_form
-    return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form})
+	messageSent = False
+	post = get_object_or_404(Post, pk=pk)
+	comments = Comment.objects.filter(post=pk,moderation=True)
+	initial = {'post': post.pk}
+	initial['author'] = request.user.first_name + ' ' + request.user.last_name
+	form_class = CommentForm
+	form = form_class(initial=initial)
+	if request.method == 'POST' or request.FILES:
+		form = CommentForm(request.POST)
+		c_form = form_class(request.POST, request.FILES)
+		if c_form.is_valid():
+			c_form.save()
+		else:
+			form = c_form
+		if form.is_valid():
+			cd = form.cleaned_data
+			subject = 'НОВЫЙ КОММЕНТАРИЙ'
+			message = 'Зайдите на сайт для одобрения комментария: '+cd['content'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			messageSent = True
+	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent})
 
 @login_required
 def cult(request):
@@ -65,7 +73,7 @@ def trud(request):
 
 @login_required
 def otz(request):
-	comments = Comment.objects.all()
+	comments = Comment.objects.filter(moderation=True)
 	return render(request, 'news/otz.html', {'comments': comments})
 
 @login_required
@@ -155,39 +163,66 @@ def zapis(request, pk):
 	post = get_object_or_404(Post, pk=pk)
 	messageSent = False
 	if request.method == 'POST':
-		form = EmailForm(request.POST)
+		form = Subscribe(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
-			subject = post.content + ' ' + cd['button']
-			message = 'ГРУППОВАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num
+			subject = post.content + ' ЗАПИСЬ ' 
+			message = 'ЛИЧНАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
-			if cd['button'] == 'Записаться':
-				post.zapisi.add(request.user.id)
-			if cd['button'] == 'Отписаться':
-				post.zapisi.remove(request.user.id)
+			post.zapisi.add(request.user.id)
 	else:
-		form = EmailForm()
-	return render(request, 'news/zapis_group.html', {'form': form,'messageSent': messageSent,})
+		form = Subscribe()
+	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,})
 
-
-def zapisl(request, pk):
+def zapisg(request, pk):
 	post = get_object_or_404(Post, pk=pk)
 	messageSent = False
 	if request.method == 'POST':
-		form = EmailForm(request.POST)
+		form = Subscribe(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
-			subject = post.content + ' ' + cd['button']
-			message = 'ЛИЧНАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num
+			subject = post.content + ' ЗАПИСЬ ' 
+			message = 'ГРУППОВАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
-			if cd['button'] == 'Записаться':
-				post.zapisi.add(request.user.id)
-			if cd['button'] == 'Отписаться':
-				post.zapisi.remove(request.user.id)
+			post.zapisi.add(request.user.id)
 	else:
-		form = EmailForm()
-	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,})
+		form = Subscribe()
+	return render(request, 'news/zapisg.html', {'form': form,'messageSent': messageSent,})
+
+def otpis(request, pk):
+	post = get_object_or_404(Post, pk=pk)
+	messageSent = False
+	if request.method == 'POST':
+		form = Subscribe(request.POST)
+		if form.is_valid():
+			cd = form.cleaned_data
+			initial = {'post': post.pk}
+			subject = post.content + ' ОТПИСЬ ' 
+			message = 'ЛИЧНАЯ ОТПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num + ' ' + request.user.email
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			messageSent = True
+			post.zapisi.remove(request.user.id)
+	else:
+		form = Subscribe()
+	return render(request, 'news/otpisg.html', {'form': form,'messageSent': messageSent,})
+
+def otpisg(request, pk):
+	post = get_object_or_404(Post, pk=pk)
+	messageSent = False
+	if request.method == 'POST':
+		form = Subscribe(request.POST)
+		if form.is_valid():
+			cd = form.cleaned_data
+			initial = {'post': post.pk}
+			subject = post.content + ' ОТПИСЬ ' 
+			message = 'ГРУППОВАЯ ОТПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			messageSent = True
+			post.zapisi.remove(request.user.id)
+	else:
+		form = Subscribe()
+	return render(request, 'news/otpisg.html', {'form': form,'messageSent': messageSent,})

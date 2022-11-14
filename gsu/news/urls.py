@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView
-from .views import index, zapis,zapisl,cult,consult,otz, mass,sport,trud, POSTLoginView, profile, POSTLogoutView, ChangeUserInfoView, POSTChangeView, RegisterUserView, RegisterDoneView, user_activate, DeleteUserView, detail
+from .views import index, zapis,zapisg,otpis,otpisg,cult,consult,otz, mass,sport,trud, POSTLoginView, profile, POSTLogoutView, ChangeUserInfoView, POSTChangeView, RegisterUserView, RegisterDoneView, user_activate, DeleteUserView, detail
 
 app_name = 'news'
 
@@ -14,7 +14,9 @@ urlpatterns = [
     path('consult/', consult, name='consult'),
     path('otz/', otz, name='otz'),
     path('zapis/<int:pk>/', zapis, name='zapis'),
-    path('zapisl/<int:pk>/', zapisl, name='zapisl'),
+    path('zapisg/<int:pk>/', zapisg, name='zapisg'),
+    path('otpis/<int:pk>/', otpis, name='otpis'),
+    path('otpisg/<int:pk>/', otpisg, name='otpisg'),
     path('accounts/register/activate/<str:sign>/', user_activate, name='register_activate'),
     path('accounts/register/done', RegisterDoneView.as_view(), name='register_done'),
     path('accounts/register/', RegisterUserView.as_view(), name='register'),

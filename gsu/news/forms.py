@@ -5,11 +5,14 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 
 
+class Index(forms.Form):
+    date = forms.DateTimeField(widget=forms.SelectDateWidget)
+
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = '__all__'
-        widgets = {'post': forms.HiddenInput, 'author': forms.HiddenInput}
+        widgets = {'post': forms.HiddenInput, 'author': forms.HiddenInput,'moderation':forms.HiddenInput}
 
 
 class ChangeUserInfoForm(forms.ModelForm):
@@ -57,8 +60,5 @@ class RegisterUserForm(forms.ModelForm):
         fields = ('username', 'avatar', 'email', 'password1', 'password2',
                   'first_name', 'last_name','phone_num','faculty','group')
 
-class EmailForm(forms.Form):
+class Subscribe(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
-    CHOICES=[('Записаться','Записаться'),
-         ('Отписаться','Отписаться')]
-    button = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)

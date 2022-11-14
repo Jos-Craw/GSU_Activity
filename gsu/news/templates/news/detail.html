@@ -5,13 +5,7 @@
 	<div class="post">
 		<div class="post-author">
 			<div class="post-author-a">
-				{% if post.author.avatar %}
-			      <img class="avatar-small" src="{{ post.author.avatar.url }}">
-			    {% else %}
-			      <img class="avatar-small" src="\static\news\user.png">
-			    {% endif %}
 				<div>
-					{{ post.author }}<br>
 					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}
 				</div>
 			</div>
@@ -20,8 +14,8 @@
 			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
 			Количество свободных мест: {{ post.mesta }}<br>
 			Цена: {{ post.stoim }}<br>
-			<a href="{% url 'news:zapis' pk=post.pk %}" class="link">ЗАПИСАТЬ/ОТПИСАТЬ ГРУППУ</a><br>
-			<a href="{% url 'news:zapisl' pk=post.pk %}" class="link">ЗАПИСАТЬСЯ/ОТПИСАТЬСЯ ЛИЧНО</a>
+			<a href="{% url 'news:zapis' pk=post.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/<a href="{% url 'news:otpis' pk=post.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+			<a href="{% url 'news:zapisg' pk=post.pk %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/<a href="{% url 'news:otpisg' pk=post.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a>
 			{% if post.image %}
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
 			{% endif %}
@@ -39,7 +33,7 @@
 		<form method="post">
 			{% csrf_token %}
 			{{ form.as_p }}
-			<button type="submit">Add comment</button>
+			<button type="submit">Добавить отзыв</button>
 		</form><br>
 		{% if comments %}
 			{% for comment in comments %}

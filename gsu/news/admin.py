@@ -16,11 +16,11 @@ admin.site.register(Post, PostAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('content', 'author', 'pubdate', 'post')
+    list_display = ('content', 'author', 'pubdate', 'post', 'moderation')
     list_display_links = ('content',)
     search_fields = ('content', 'author')
     date_hierarchy = 'pubdate'
-    fields = ('author', 'content', 'post')
+    fields = ('author', 'content', 'post', 'moderation')
 
 
 admin.site.register(Comment, CommentAdmin)

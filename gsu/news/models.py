@@ -53,7 +53,7 @@ class Post(models.Model):
     stoim = models.CharField(null = True, blank = False, max_length=10)
     mesta = models.CharField(null = True, blank = False, max_length=10)
     tags = models.CharField(null = True, blank = False,choices=tag, max_length=50)
-    zapisi = models.ManyToManyField(AdvUser, related_name='Записаные')
+    zapisi = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True)
 
     class Meta:
         verbose_name_plural = 'События'
@@ -69,6 +69,7 @@ class Comment(models.Model):
     content = models.TextField(null=True, blank=False)
     author = models.CharField(max_length=30)
     pubdate = models.DateTimeField(auto_now_add=True, db_index=True)
+    moderation = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'Отзывы'

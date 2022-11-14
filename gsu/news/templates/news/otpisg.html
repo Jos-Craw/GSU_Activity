@@ -3,7 +3,7 @@
 <div class="post">
 {% if messageSent %}
     <div class="container">
-      <h3><strong>Выполнено</strong></h3>
+      <h3><strong>Вы отписали группу</strong></h3>
       <a href="{% url 'news:index' %}" class="link">Календарь мероприятий</a>
     </div>
     {% else %}
@@ -15,7 +15,7 @@
           <input
             type="submit"
             class="btn btn-secondary"
-            value="Выполнить"
+            value="Отписать"
           />
         </div>
       </form>
