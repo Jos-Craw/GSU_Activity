@@ -1,7 +1,7 @@
 from django.contrib import admin
 import datetime
 
-from .models import AdvUser, Post, Comment
+from .models import AdvUser, Post, Comment, Consult
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -24,6 +24,14 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Comment, CommentAdmin)
+
+class ConsultAdmin(admin.ModelAdmin):
+    list_display = ('eventdate', 'eventtime','zan')
+    search_fields = ('eventdate', 'eventtime','zan')
+    fields = ('eventdate', 'eventtime','zan')
+
+
+admin.site.register(Consult, ConsultAdmin)
 
 
 class AdvUserAdmin(admin.ModelAdmin):

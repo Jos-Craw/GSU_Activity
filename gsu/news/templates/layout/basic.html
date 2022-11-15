@@ -9,7 +9,7 @@
 </head>
 <body>
 	<header>
-		<a href="{% url 'news:index' %} " class="link"><strong>GSU</strong>Activity</a>
+		<img src="\static\news\logo.svg"><a href="{% url 'news:index' %} " class="link"><strong>GSU</strong>Activity</a><img src="\static\news\building.png">
 	</header>
 		<div class="content">
 			<nav class="nav">
@@ -22,6 +22,11 @@
       						<img class="avatar" src="\static\news\user.png"><br><br>
     					{% endif %}
 			    	</a>
+					<a href="{% url 'news:logout' %}" class="link">Выйти</a>
+					{% else %}
+					<a href="{% url 'news:login' %}" class="link">Войти</a>
+					<a href="{% url 'news:register' %}" class="link">Регистрация</a>
+					{% endif %}
 					<a href="{% url 'news:index' %}" class="link">Календарь мероприятий</a>
 					<a href="{% url 'news:cult' %}" class="link">Культурно-досуговая деятельность</a>
 					<a href="{% url 'news:sport' %}" class="link">Спортивная деятельность</a>
@@ -29,11 +34,6 @@
 					<a href="{% url 'news:trud' %}" class="link">Трудовая и волонтерская деятельность</a>
 					<a href="{% url 'news:consult' %}" class="link">Консультация психолога</a>
 					<a href="{% url 'news:otz' %}" class="link">Общие отзывы</a>
-					<a href="{% url 'news:logout' %}" class="link">Выйти</a>
-					{% else %}
-					<a href="{% url 'news:login' %}" class="link">Войти</a>
-					<a href="{% url 'news:register' %}" class="link">Регистрация</a>
-					{% endif %}
 				</div>
 			</nav>
 			<section>

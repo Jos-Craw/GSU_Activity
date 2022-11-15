@@ -1,11 +1,14 @@
 {% extends "layout/basic.html" %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<form method="post">
-					{% csrf_token %}
-					{{ form.as_p }}
-</form>
+<div class="post">
+	Выберите период времени
+	<form method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">Выбрать</button>
+	</form>
+</div>
 {% if posts %}
 {% for post in posts %}
 	<div class="post">
@@ -37,6 +40,5 @@
 		</div>
 	</div>
 {% endfor %}
-{% endif %}
 {% endif %}
 {% endblock %}

@@ -1,12 +1,13 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Post, AdvUser, user_registrated, Comment
+from .models import Post, AdvUser, user_registrated, Comment, Consult
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 
 
 class Index(forms.Form):
-    date = forms.DateTimeField(widget=forms.SelectDateWidget)
+    Начало = forms.DateTimeField(widget=forms.SelectDateWidget)
+    Конец = forms.DateTimeField(widget=forms.SelectDateWidget)
 
 class CommentForm(ModelForm):
     class Meta:
@@ -62,3 +63,12 @@ class RegisterUserForm(forms.ModelForm):
 
 class Subscribe(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
+
+class NewConsult(ModelForm):
+    class Meta:
+        model = Consult
+        fields = '__all__'
+        widgets = {'zan': forms.HiddenInput}
+
+class zapis_consult(forms.Form):
+    pass

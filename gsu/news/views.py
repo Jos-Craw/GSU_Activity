@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, AdvUser, Comment
+from .models import Post, AdvUser, Comment, Consult
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index
+from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -16,10 +16,19 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 
-@login_required
 def index(request):
-    posts = Post.objects.all() #добавить фильтр по датам
-    return render(request, 'news/index.html', {'posts': posts})
+	posts = Post.objects.all()
+	dat = None
+	if request.method == 'POST':
+		form = Index(request.POST)
+		if form.is_valid():
+			nach = form.cleaned_data['Начало']
+			con = form.cleaned_data['Конец']
+			posts = Post.objects.filter(eventdate__range=(nach,con))
+	else:
+		form = Index()
+	return render(request, 'news/index.html', {'form': form,'posts': posts})
+
 
 @login_required
 def profile(request):
@@ -51,35 +60,62 @@ def detail(request, pk):
 			messageSent = True
 	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent})
 
-@login_required
+
 def cult(request):
     posts = Post.objects.all()
     return render(request, 'news/cult.html', {'posts': posts})
 
-@login_required
+
 def sport(request):
     posts = Post.objects.all()
     return render(request, 'news/sport.html', {'posts': posts})
 
-@login_required
+
 def mass(request):
     posts = Post.objects.all()
     return render(request, 'news/mass.html', {'posts': posts})
 
-@login_required
+
 def trud(request):
     posts = Post.objects.all()
     return render(request, 'news/trud.html', {'posts': posts})
 
-@login_required
+
 def otz(request):
 	comments = Comment.objects.filter(moderation=True)
 	return render(request, 'news/otz.html', {'comments': comments})
 
-@login_required
+
 def consult(request):
-	posts = Post.objects.all()
-	return render(request, 'news/consult.html', {'posts': posts})
+	consults = Consult.objects.all()
+	form_class = NewConsult
+	form = form_class
+	if request.method == 'POST':
+		c_form = form_class(request.POST, request.FILES)
+		if c_form.is_valid():
+			c_form.save()
+		else:
+			form = c_form
+	return render(request, 'news/consult.html', {'consults': consults, 'form': form})
+
+def zapis_consult(request, pk):
+	consult = get_object_or_404(Consult, pk=pk)
+	initial = {'consult': consult.pk}
+	messageSent = False
+	form = zapis_consult
+	if request.method == 'POST':
+		form = zapis_consult(request.POST)
+		if form.is_valid(): 
+			subject = 'ЗАПИСЬ на консультацию '  
+			message = 'ЗАПИСЬ на '+ str(consult.eventdate) +' '+ consult.eventtime + ' : ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			messageSent = True
+			consult.zan = True
+			consult.save()
+	else:
+		form = zapis_consult()
+	return render(request,'news/zapis_consult.html',{'consult':consult,'form': form,'messageSent': messageSent})
+
 
 
 class POSTLoginView(LoginView):
@@ -174,7 +210,7 @@ def zapis(request, pk):
 			post.zapisi.add(request.user.id)
 	else:
 		form = Subscribe()
-	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,})
+	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent})
 
 def zapisg(request, pk):
 	post = get_object_or_404(Post, pk=pk)

@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView
-from .views import index, zapis,zapisg,otpis,otpisg,cult,consult,otz, mass,sport,trud, POSTLoginView, profile, POSTLogoutView, ChangeUserInfoView, POSTChangeView, RegisterUserView, RegisterDoneView, user_activate, DeleteUserView, detail
+from .views import index,zapis_consult, zapis,zapisg,otpis,otpisg,cult,consult,otz, mass,sport,trud, POSTLoginView, profile, POSTLogoutView, ChangeUserInfoView, POSTChangeView, RegisterUserView, RegisterDoneView, user_activate, DeleteUserView, detail
 
 app_name = 'news'
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('trud/', trud, name='trud'),
     path('consult/', consult, name='consult'),
     path('otz/', otz, name='otz'),
+    path('zapis_consult/<int:pk>/', zapis_consult, name='zapis_consult'),
     path('zapis/<int:pk>/', zapis, name='zapis'),
     path('zapisg/<int:pk>/', zapisg, name='zapisg'),
     path('otpis/<int:pk>/', otpis, name='otpis'),

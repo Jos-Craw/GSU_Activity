@@ -32,6 +32,25 @@ class AdvUser(AbstractUser):
     class Meta(AbstractUser.Meta):
         pass
 
+class Consult(models.Model):
+    date = (
+         ('9:00','9:00'),
+         ('10:00','10:00'),
+         ('11:00','11:00'),
+         ('12:00','12:00'),
+         ('13:00','13:00'),
+         ('14:00','14:00'),
+         ('15:00','15:00'),
+        )
+    eventdate = models.DateField(db_index=True,null=True,blank=False)
+    eventtime = models.CharField(choices=date,blank=False,max_length=10)
+    zan = models.BooleanField(default=False, db_index=True,verbose_name='Занято?')
+
+    class Meta:
+        verbose_name_plural = 'Консультации'
+        verbose_name = 'Консультация'
+        ordering = ['eventdate']
+
 
 class Post(models.Model):
     tag = (
@@ -52,7 +71,7 @@ class Post(models.Model):
     eventdate = models.DateField(db_index=True,null=True,blank=False)
     stoim = models.CharField(null = True, blank = False, max_length=10)
     mesta = models.CharField(null = True, blank = False, max_length=10)
-    tags = models.CharField(null = True, blank = False,choices=tag, max_length=50)
+    tags = models.CharField( blank = False,choices=tag, max_length=50)
     zapisi = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True)
 
     class Meta:
