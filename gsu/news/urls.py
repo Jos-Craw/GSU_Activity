@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView
-from .views import index,zap_consult, zapis,zapisg,otpis,otpisg,cult,consult,otz, mass,sport,trud, POSTLoginView, profile, POSTLogoutView, ChangeUserInfoView, POSTChangeView, RegisterUserView, RegisterDoneView, user_activate, DeleteUserView, detail
+from .views import index,zap_consult,deletepost, create, zapis,zapisg,otpis,otpisg,cult,consult,otz, mass,sport,trud, POSTLoginView, profile, POSTLogoutView, ChangeUserInfoView, POSTChangeView, RegisterUserView, RegisterDoneView, user_activate, DeleteUserView, detail
 
 app_name = 'news'
 
@@ -18,6 +18,7 @@ urlpatterns = [
     path('zapisg/<int:pk>/', zapisg, name='zapisg'),
     path('otpis/<int:pk>/', otpis, name='otpis'),
     path('otpisg/<int:pk>/', otpisg, name='otpisg'),
+    path('accounts/profile/add/', create, name='add'),
     path('accounts/register/activate/<str:sign>/', user_activate, name='register_activate'),
     path('accounts/register/done', RegisterDoneView.as_view(), name='register_done'),
     path('accounts/register/', RegisterUserView.as_view(), name='register'),
@@ -26,5 +27,6 @@ urlpatterns = [
     path('accounts/profile/delete', DeleteUserView.as_view(), name='profile_delete'),
     path('accounts/profile/', profile, name='profile'),
     path('accounts/profile/change', ChangeUserInfoView.as_view(), name='profile_change'),
-    path('accounts/password/change', POSTChangeView.as_view(), name='password_change'),   
+    path('accounts/password/change', POSTChangeView.as_view(), name='password_change'),  
+    path('accounts/profile/deletepost/<int:pk>/', deletepost, name='delete_post'), 
 ]

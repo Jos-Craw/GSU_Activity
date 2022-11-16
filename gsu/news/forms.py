@@ -73,3 +73,10 @@ class NewConsult(ModelForm):
 
 class zapis_consult(forms.Form):
     pass
+
+class PostForm(ModelForm):
+    eventdate = forms.DateTimeField(widget=forms.SelectDateWidget)
+    class Meta:
+        model = Post
+        fields = '__all__'
+        widgets = {'author': forms.HiddenInput, 'zapisi':forms.HiddenInput}

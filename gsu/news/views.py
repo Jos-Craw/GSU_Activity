@@ -3,7 +3,7 @@ from .models import Post, AdvUser, Comment, Consult
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult
+from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
@@ -28,12 +28,43 @@ def index(request):
 		form = Index()
 	return render(request, 'news/index.html', {'form': form,'posts': posts})
 
-
 @login_required
 def profile(request):
     posts = Post.objects.filter(zapisi=request.user.id)
-    return render(request, 'news/profile.html', {'posts': posts})
+    your_posts = Post.objects.filter(author=request.user.pk)
+    return render(request, 'news/profile.html', {'posts': posts,'your_posts':your_posts})
 
+@login_required
+def create(request):
+    if request.method == 'POST' or request.FILES:
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save()
+            return redirect('news:profile')
+    else:
+        form = PostForm(initial={'author': request.user.pk})
+    context = {'form': form}
+    return render(request, 'news/create.html', context)
+
+@login_required
+def deletepost(request, pk):
+	useremail=[]
+	users = AdvUser.objects.all()
+	messageSent = False
+	post = get_object_or_404(Post, pk=pk)
+	if request.method == 'POST':
+		for d in post.zapisi.all():
+  			print(d.email)
+  			useremail.append(d.email)
+		subject = 'ОТМЕНЯ МЕРОПРИЯТИЯ' 
+		message = 'Отменя ' + post.content + ' ' + str(post.eventdate)+ ' ' +str(post.eventtime)
+		send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, useremail)
+		messageSent = True
+		post.delete()
+		return redirect('news:index')
+	else:
+		context = {'post': post,'messageSent': messageSent}
+	return render(request, 'news/deletepost.html', context)
 
 @login_required
 def detail(request, pk):

@@ -28,6 +28,9 @@
 			{% if post.file %}
 				<a href='{{ post.file.url }}' target="-blank" class="file">{{post.filename}}</a><br>
 			{% endif %}
+			{% if user.is_superuser == 1 %}
+				<a href="{% url 'news:delete_post' pk=post.pk %}"  class="link">Delete</a>
+			{% endif %}
 		</div>
 	</div>
 		<form method="post">
