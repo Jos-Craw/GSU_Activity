@@ -65,6 +65,7 @@ class Subscribe(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
 
 class NewConsult(ModelForm):
+    eventdate = forms.DateTimeField(widget=forms.SelectDateWidget)
     class Meta:
         model = Consult
         fields = '__all__'

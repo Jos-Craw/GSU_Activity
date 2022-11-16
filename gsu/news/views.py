@@ -4,7 +4,6 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult
-from django.contrib.auth import logout
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
@@ -98,14 +97,13 @@ def consult(request):
 			form = c_form
 	return render(request, 'news/consult.html', {'consults': consults, 'form': form})
 
-def zapis_consult(request, pk):
+def zap_consult(request, pk):
 	consult = get_object_or_404(Consult, pk=pk)
-	initial = {'consult': consult.pk}
 	messageSent = False
-	form = zapis_consult
 	if request.method == 'POST':
 		form = zapis_consult(request.POST)
 		if form.is_valid(): 
+			initial = {'consult': consult.pk}
 			subject = 'ЗАПИСЬ на консультацию '  
 			message = 'ЗАПИСЬ на '+ str(consult.eventdate) +' '+ consult.eventtime + ' : ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
@@ -113,7 +111,7 @@ def zapis_consult(request, pk):
 			consult.zan = True
 			consult.save()
 	else:
-		form = zapis_consult()
+		form = zapis_consult
 	return render(request,'news/zapis_consult.html',{'consult':consult,'form': form,'messageSent': messageSent})
 
 
