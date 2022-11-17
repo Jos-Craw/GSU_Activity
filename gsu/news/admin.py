@@ -1,7 +1,7 @@
 from django.contrib import admin
 import datetime
 
-from .models import AdvUser, Post, Comment, Consult
+from .models import AdvUser, Post, Comment, Consult, Section
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -44,3 +44,11 @@ class AdvUserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(AdvUser, AdvUserAdmin)
+
+
+class SectionAdmin(admin.ModelAdmin):
+    list_display= ('name','otobr')
+    search_fields = ('name','otobr')
+    fields = ('name','otobr')
+
+admin.site.register(Section, SectionAdmin)

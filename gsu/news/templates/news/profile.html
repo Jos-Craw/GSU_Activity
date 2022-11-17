@@ -23,7 +23,6 @@
 		<a href="{% url 'news:password_change' %}"  class="link">Изменить пароль</a><br>
 		<a href="{% url 'news:profile_delete' %}"  class="link">Удалить аккаунт</a><br>
 		{% if user.is_superuser == 1 %}
-		<a href="{% url 'news:add' %}"  class="link">Создать событие</a><br>
 		Созданые события:<br>
 		<div>
 			{% if your_posts %}

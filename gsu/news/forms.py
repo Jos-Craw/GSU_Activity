@@ -62,7 +62,12 @@ class RegisterUserForm(forms.ModelForm):
                   'first_name', 'last_name','phone_num','faculty','group')
 
 class Subscribe(forms.Form):
+    pass
+
+class Subscribeg(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
+    colvo = forms.IntegerField(min_value=1, max_value=30)
+    
 
 class NewConsult(ModelForm):
     eventdate = forms.DateTimeField(widget=forms.SelectDateWidget)

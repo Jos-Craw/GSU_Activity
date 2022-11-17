@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.dispatch import Signal
 from .utilities import send_activation_notification
 import os
+from django.core.validators import MinValueValidator
 
 
 class AdvUser(AbstractUser):
@@ -70,7 +71,7 @@ class Post(models.Model):
     eventtime = models.TimeField(db_index=True,null=True,blank=False)
     eventdate = models.DateField(db_index=True,null=True,blank=False)
     stoim = models.CharField(null = True, blank = False, max_length=10)
-    mesta = models.CharField(null = True, blank = False, max_length=10)
+    mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(30)]) 
     tags = models.CharField( blank = False,choices=tag, max_length=50)
     zapisi = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True)
 
@@ -94,6 +95,11 @@ class Comment(models.Model):
         verbose_name_plural = 'Отзывы'
         verbose_name = 'Отзыв'
         ordering = ['-pubdate']
+
+
+class Section(models.Model):
+    name = models.CharField(max_length=30)
+    otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
 
 
 user_registrated = Signal(['instance'])

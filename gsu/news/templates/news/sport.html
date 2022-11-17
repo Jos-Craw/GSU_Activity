@@ -1,8 +1,17 @@
 {% extends "layout/basic.html" %}
-
 {% block title %}Спортивная деятельность{% endblock %}
 
 {% block content %}
+	<div class="post">
+		Записаться на секцию<br>
+		{% for section in sections %}
+			{{section.name}}<br>
+			<a href="{% url 'news:sec' pk=section.pk %}" class="link">Записаться</a><br><br>
+		{% endfor %}
+	</div>
+{% if user.id == 5 or user.id == 1  %}
+		<a href="{% url 'news:add' %}"  class="link">Создать событие</a><br>
+{% endif %}
 {% if posts %}
 {% for post in posts %}
 {% if post.tags == 'sport' %}
@@ -10,15 +19,10 @@
 		<div class="post-author">
 			<div class="post-author-a">
 			    <div>
-					{% if post.tags == 'cult' %}
-					<a href="{% url 'news:cult' %}" class="link">{{ post.get_tags_display}}</a><br>
-					{% elif post.tags == 'sport' %}
+					{% if post.tags == 'sport' %}
 					<a href="{% url 'news:sport' %}" class="link">{{ post.get_tags_display}}</a><br>
-					{% elif post.tags == 'mass' %}
-					<a href="{% url 'news:mass' %}" class="link">{{ post.get_tags_display}}</a><br>
-					{% elif post.tags == 'trud' %}
-					<a href="{% url 'news:trud' %}" class="link">{{ post.get_tags_display}}</a><br>
 					{% endif %}
+					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}
 				</div>
 			</div>
 			<div class="post-author-b">
@@ -26,18 +30,16 @@
 			</div>
 		</div>
 		<div class="post-content">
-			{{ post.content}}<br>
+			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+			Количество свободных мест: {{ post.mesta }}<br>
+			Цена: {{ post.stoim }}<br>
+			{% if user.is_authenticated %}
+				{% for post in your_zapisi %}
+					Вы записаны<br>
+				{% endfor %}
+			{% endif %}
 			{% if post.image %}
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
-			{% endif %}
-			{% if post.video %}
-				<video src="{{ post.video.url }}" class="media" controls="controls"></video><br>
-			{% endif %}
-			{% if post.audio %}
-				<audio src="{{ post.audio.url }}" controls="controls"></audio><br>
-			{% endif %}
-			{% if post.file %}
-				<a href='{{ post.file.url }}' target="-blank" class="file">{{post.filename}}</a><br>
 			{% endif %}
 		</div>
 	</div>

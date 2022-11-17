@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, AdvUser, Comment, Consult
+from .models import Post, AdvUser, Comment, Consult,Section
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm
+from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm,Subscribeg
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
@@ -93,27 +93,47 @@ def detail(request, pk):
 
 def cult(request):
     posts = Post.objects.all()
-    return render(request, 'news/cult.html', {'posts': posts})
+    your_zapisi = Post.objects.filter(zapisi=request.user.id) 
+    return render(request, 'news/cult.html', {'posts': posts,'your_zapisi':your_zapisi})
 
 
 def sport(request):
-    posts = Post.objects.all()
-    return render(request, 'news/sport.html', {'posts': posts})
+	sections = Section.objects.filter(otobr=True)
+	posts = Post.objects.all()
+	your_zapisi = Post.objects.filter(zapisi=request.user.id) 
+	return render(request, 'news/sport.html', {'posts': posts,'your_zapisi':your_zapisi,'sections':sections})
 
 
 def mass(request):
     posts = Post.objects.all()
-    return render(request, 'news/mass.html', {'posts': posts})
+    your_zapisi = Post.objects.filter(zapisi=request.user.id) 
+    return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi})
 
 
 def trud(request):
     posts = Post.objects.all()
-    return render(request, 'news/trud.html', {'posts': posts})
+    your_zapisi = Post.objects.filter(zapisi=request.user.id) 
+    return render(request, 'news/trud.html', {'posts': posts,'your_zapisi':your_zapisi})
 
 
 def otz(request):
 	comments = Comment.objects.filter(moderation=True)
 	return render(request, 'news/otz.html', {'comments': comments})
+
+def sec(request,pk):
+	section = get_object_or_404(Section, pk=pk)
+	messageSent = False
+	if request.method == 'POST':
+		form = zapis_consult(request.POST)
+		if form.is_valid(): 
+			initial = {'section': section.pk}
+			subject = 'ЗАПИСЬ на секцию '  
+			message = 'ЗАПИСЬ на '+ section.name +' ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			messageSent = True
+	else:
+		form = zapis_consult
+	return render(request, 'news/sec.html')
 
 
 def consult(request):
@@ -237,6 +257,8 @@ def zapis(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
 			post.zapisi.add(request.user.id)
+			post.mesta = post.mesta -1
+			post.save()
 	else:
 		form = Subscribe()
 	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent})
@@ -245,7 +267,7 @@ def zapisg(request, pk):
 	post = get_object_or_404(Post, pk=pk)
 	messageSent = False
 	if request.method == 'POST':
-		form = Subscribe(request.POST)
+		form = Subscribeg(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
@@ -254,8 +276,10 @@ def zapisg(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
 			post.zapisi.add(request.user.id)
+			post.mesta = post.mesta - cd['colvo']
+			post.save()
 	else:
-		form = Subscribe()
+		form = Subscribeg()
 	return render(request, 'news/zapisg.html', {'form': form,'messageSent': messageSent,})
 
 def otpis(request, pk):
@@ -271,6 +295,8 @@ def otpis(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
 			post.zapisi.remove(request.user.id)
+			post.mesta = post.mesta +1
+			post.save()
 	else:
 		form = Subscribe()
 	return render(request, 'news/otpisg.html', {'form': form,'messageSent': messageSent,})
@@ -279,7 +305,7 @@ def otpisg(request, pk):
 	post = get_object_or_404(Post, pk=pk)
 	messageSent = False
 	if request.method == 'POST':
-		form = Subscribe(request.POST)
+		form = Subscribeg(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
@@ -288,6 +314,8 @@ def otpisg(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
 			post.zapisi.remove(request.user.id)
+			post.mesta = post.mesta + cd['colvo']
+			post.save()
 	else:
-		form = Subscribe()
+		form = Subscribeg()
 	return render(request, 'news/otpisg.html', {'form': form,'messageSent': messageSent,})
