@@ -62,6 +62,7 @@ class RegisterUserForm(forms.ModelForm):
                   'first_name', 'last_name','phone_num','faculty','group')
 
 class Subscribe(forms.Form):
+    message = forms.CharField(widget=forms.Textarea)
     pass
 
 class Subscribeg(forms.Form):

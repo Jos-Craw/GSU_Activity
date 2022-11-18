@@ -37,11 +37,6 @@
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
 			{% endif %}
 			Количество свободных мест: {{ post.mesta }}<br>
-			{% if user.is_authenticated %}
-				{% if post in your_zapisi %}
-					Вы записаны<br>
-				{% endif %}
-			{% endif %}
 		</div>
 	</div>
 {% endfor %}

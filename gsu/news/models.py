@@ -61,7 +61,7 @@ class Post(models.Model):
         ('trud','Трудовая и волонтерская деятельность'),
         )
 
-    name = models.CharField(null=True, blank=False,max_length=50)
+    name = models.CharField(null=True, blank=False,max_length=100)
     content = models.TextField(null=True, blank=False)
     image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, null=True)
     file = models.FileField(upload_to='files/%Y/%m/%d/', blank=True, null=True)
@@ -79,7 +79,7 @@ class Post(models.Model):
     class Meta:
         verbose_name_plural = 'События'
         verbose_name = 'Событие'
-        ordering = ['eventdate']
+        ordering = ['-pubdate']
 
     def filename(self):
         return os.path.basename(self.file.name)

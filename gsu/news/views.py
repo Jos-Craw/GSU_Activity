@@ -13,7 +13,7 @@ from django.core.signing import BadSignature
 from .utilities import signer
 from django.core.mail import send_mail
 from django.conf import settings
-
+from datetime import datetime, timedelta, date
 
 def index(request):
 	posts = Post.objects.all()
@@ -33,7 +33,8 @@ def index(request):
 def profile(request):
     posts = Post.objects.filter(zapisi=request.user.id)
     your_posts = Post.objects.filter(author=request.user.pk)
-    return render(request, 'news/profile.html', {'posts': posts,'your_posts':your_posts})
+    a = date.today().strftime('%d %B %Y')
+    return render(request, 'news/profile.html', {'posts': posts,'your_posts':your_posts,'a':a})
 
 @login_required
 def create(request):
@@ -69,6 +70,7 @@ def deletepost(request, pk):
 
 @login_required
 def detail(request, pk):
+	a = date.today().strftime('%d %B %Y')
 	your_zapisi = Post.objects.filter(zapisi=request.user.id)
 	messageSent = False
 	post = get_object_or_404(Post, pk=pk)
@@ -90,7 +92,7 @@ def detail(request, pk):
 			message = 'Зайдите на сайт для одобрения комментария: '+cd['content'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
-	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent,'your_zapisi':your_zapisi})
+	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent,'your_zapisi':your_zapisi,'a':a})
 
 
 def cult(request):
