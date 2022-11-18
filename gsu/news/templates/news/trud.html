@@ -2,7 +2,22 @@
 {% block title %}Трудовая и волонтерская деятельность{% endblock %}
 
 {% block content %}
-
+	<div class="post">
+		Записаться на трудовое направление<br>
+		{% for trud in truds %}
+			{{trud.name}}<br>
+			{% if user.is_authenticated %}
+				<a href="{% url 'news:trud_naprav' pk=trud.pk %}" class="link">Записаться</a><br><br>
+			{% endif %}
+		{% endfor %}
+		Записаться на волонтерское направление<br>
+		{% for volont in volonts %}
+			{{volont.name}}<br>
+			{% if user.is_authenticated %}
+				<a href="{% url 'news:volon_naprav' pk=volont.pk %}" class="link">Записаться</a><br><br>
+			{% endif %}
+		{% endfor %}
+	</div>
 {% if user.id == 7 or user.id == 1  %}
 		<a href="{% url 'news:add' %}"  class="link">Создать событие</a><br>
 {% endif %}
@@ -24,14 +39,15 @@
 			</div>
 		</div>
 		<div class="post-content">
-			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+			{{ post.name}}<br>{{ post.eventtime }} {{ post.eventdate }}<br>
 			Количество свободных мест: {{ post.mesta }}<br>
 			Цена: {{ post.stoim }}<br>
 			{% if user.is_authenticated %}
-				{% for post in your_zapisi %}
+				{% if post in your_zapisi %}
 					Вы записаны<br>
-				{% endfor %}
+				{% endif %}
 			{% endif %}
+
 			{% if post.image %}
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
 			{% endif %}

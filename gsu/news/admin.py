@@ -1,15 +1,15 @@
 from django.contrib import admin
 import datetime
 
-from .models import AdvUser, Post, Comment, Consult, Section
+from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'content', 'author', 'pubdate','tags', 'image','stoim','mesta', 'file', 'video', 'audio','eventtime','eventdate')
-    list_display_links = ('content',)
-    search_fields = ('content', 'author','tags','eventtime','eventdate','stoim','mesta', 'image', 'file', 'video', 'audio','zapisi')
+    list_display = ('id','name', 'content', 'author', 'pubdate','tags', 'image','stoim','mesta', 'file', 'video', 'audio','eventtime','eventdate')
+    list_display_links = ('content','name',)
+    search_fields = ('name','content', 'author','tags','eventtime','eventdate','stoim','mesta', 'image', 'file', 'video', 'audio','zapisi')
     date_hierarchy = 'pubdate'
-    fields = ('author','tags', 'content','eventtime','eventdate', 'image','stoim','mesta', 'file', 'video', 'audio','zapisi')
+    fields = ('name','author','tags', 'content','eventtime','eventdate', 'image','stoim','mesta', 'file', 'video', 'audio','zapisi')
 
 
 admin.site.register(Post, PostAdmin)
@@ -52,3 +52,24 @@ class SectionAdmin(admin.ModelAdmin):
     fields = ('name','otobr')
 
 admin.site.register(Section, SectionAdmin)
+
+class TvorAdmin(admin.ModelAdmin):
+    list_display= ('name','otobr')
+    search_fields = ('name','otobr')
+    fields = ('name','otobr')
+
+admin.site.register(Tvor, TvorAdmin)
+
+class TrudAdmin(admin.ModelAdmin):
+    list_display= ('name','otobr')
+    search_fields = ('name','otobr')
+    fields = ('name','otobr')
+
+admin.site.register(Trud, TrudAdmin)
+
+class VolantAdmin(admin.ModelAdmin):
+    list_display= ('name','otobr')
+    search_fields = ('name','otobr')
+    fields = ('name','otobr')
+
+admin.site.register(Volant, VolantAdmin)

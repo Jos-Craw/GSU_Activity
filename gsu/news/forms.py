@@ -85,3 +85,6 @@ class PostForm(ModelForm):
         model = Post
         fields = '__all__'
         widgets = {'author': forms.HiddenInput, 'zapisi':forms.HiddenInput}
+
+class TvorForm(forms.Form):
+    Роль = forms.ChoiceField(choices=(("Артист", "Артист"), ("Организатор", "Организатор")))

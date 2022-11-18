@@ -25,8 +25,8 @@ class AdvUser(AbstractUser):
     is_activated = models.BooleanField(default=True, db_index=True,verbose_name='Прошел активацию?')
     avatar = models.ImageField(null=True, blank=True, upload_to="image/profile/")
     phone_num = models.CharField(unique = True, null = True, blank = False, max_length=13)
-    faculty = models.CharField(null = True, blank = True,choices=fac,max_length=50)
-    group = models.CharField(null = True, blank = True,max_length=10)
+    faculty = models.CharField(null = True, blank =False,choices=fac,max_length=50)
+    group = models.CharField(null = True, blank = False,max_length=10)
 
 
 
@@ -61,6 +61,7 @@ class Post(models.Model):
         ('trud','Трудовая и волонтерская деятельность'),
         )
 
+    name = models.CharField(null=True, blank=False,max_length=50)
     content = models.TextField(null=True, blank=False)
     image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, null=True)
     file = models.FileField(upload_to='files/%Y/%m/%d/', blank=True, null=True)
@@ -71,14 +72,14 @@ class Post(models.Model):
     eventtime = models.TimeField(db_index=True,null=True,blank=False)
     eventdate = models.DateField(db_index=True,null=True,blank=False)
     stoim = models.CharField(null = True, blank = False, max_length=10)
-    mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(30)]) 
+    mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)]) 
     tags = models.CharField( blank = False,choices=tag, max_length=50)
     zapisi = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True)
 
     class Meta:
         verbose_name_plural = 'События'
         verbose_name = 'Событие'
-        ordering = ['-pubdate']
+        ordering = ['eventdate']
 
     def filename(self):
         return os.path.basename(self.file.name)
@@ -101,6 +102,33 @@ class Section(models.Model):
     name = models.CharField(max_length=30)
     otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
 
+    class Meta:
+        verbose_name_plural = 'Секции'
+        verbose_name = 'Секция'
+
+class Tvor(models.Model):
+    name = models.CharField(max_length=30)
+    otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
+
+    class Meta:
+        verbose_name_plural = 'Творческие направления'
+        verbose_name = 'Творческое направление'
+
+class Trud(models.Model):
+    name = models.CharField(max_length=30)
+    otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
+
+    class Meta:
+        verbose_name_plural = 'Трудовые направления'
+        verbose_name = 'Трудовое направление'
+
+class Volant(models.Model):
+    name = models.CharField(max_length=30)
+    otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
+
+    class Meta:
+        verbose_name_plural = 'Волонтерские направления'
+        verbose_name = 'Волонтерское направление'
 
 user_registrated = Signal(['instance'])
 

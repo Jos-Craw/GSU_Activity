@@ -32,11 +32,16 @@
 			</div>
 		</div>
 		<div class="post-content">
-			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+			{{ post.name}}<br>  {{ post.eventtime }} {{ post.eventdate }}<br>
 			{% if post.image %}
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
 			{% endif %}
-			Количество свободных мест: {{ post.mesta }}
+			Количество свободных мест: {{ post.mesta }}<br>
+			{% if user.is_authenticated %}
+				{% if post in your_zapisi %}
+					Вы записаны<br>
+				{% endif %}
+			{% endif %}
 		</div>
 	</div>
 {% endfor %}

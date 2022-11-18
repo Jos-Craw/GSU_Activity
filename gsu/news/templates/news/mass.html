@@ -24,13 +24,13 @@
 			</div>
 		</div>
 		<div class="post-content">
-			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+			{{ post.name}}<br> {{ post.eventtime }} {{ post.eventdate }}<br>
 			Количество свободных мест: {{ post.mesta }}<br>
 			Цена: {{ post.stoim }}<br>
 			{% if user.is_authenticated %}
-				{% for post in your_zapisi %}
+				{% if post in your_zapisi %}
 					Вы записаны<br>
-				{% endfor %}
+				{% endif %}
 			{% endif %}
 			{% if post.image %}
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>

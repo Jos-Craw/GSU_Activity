@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, AdvUser, Comment, Consult,Section
+from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm,Subscribeg
+from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm,Subscribeg,TvorForm
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
@@ -17,6 +17,7 @@ from django.conf import settings
 
 def index(request):
 	posts = Post.objects.all()
+	your_zapisi = Post.objects.filter(zapisi=request.user.id)
 	dat = None
 	if request.method == 'POST':
 		form = Index(request.POST)
@@ -26,7 +27,7 @@ def index(request):
 			posts = Post.objects.filter(eventdate__range=(nach,con))
 	else:
 		form = Index()
-	return render(request, 'news/index.html', {'form': form,'posts': posts})
+	return render(request, 'news/index.html', {'form': form,'posts': posts,'your_zapisi':your_zapisi})
 
 @login_required
 def profile(request):
@@ -68,6 +69,7 @@ def deletepost(request, pk):
 
 @login_required
 def detail(request, pk):
+	your_zapisi = Post.objects.filter(zapisi=request.user.id)
 	messageSent = False
 	post = get_object_or_404(Post, pk=pk)
 	comments = Comment.objects.filter(post=pk,moderation=True)
@@ -88,13 +90,31 @@ def detail(request, pk):
 			message = 'Зайдите на сайт для одобрения комментария: '+cd['content'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
-	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent})
+	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent,'your_zapisi':your_zapisi})
 
 
 def cult(request):
     posts = Post.objects.all()
-    your_zapisi = Post.objects.filter(zapisi=request.user.id) 
-    return render(request, 'news/cult.html', {'posts': posts,'your_zapisi':your_zapisi})
+    your_zapisi = Post.objects.filter(zapisi=request.user.id)
+    tvors = Tvor.objects.filter(otobr=True) 
+    return render(request, 'news/cult.html', {'posts': posts,'your_zapisi':your_zapisi,'tvors':tvors})
+
+
+def tvor(request,pk):
+	naprav = get_object_or_404(Tvor, pk=pk)
+	messageSent = False
+	if request.method == 'POST':
+		form = TvorForm(request.POST)
+		if form.is_valid(): 
+			cd = form.cleaned_data
+			initial = {'naprav': naprav.pk}
+			subject = 'ЗАПИСЬ на творческое направление ' + cd['Роль']
+			message = 'ЗАПИСЬ на '+ naprav.name +' '+cd['Роль'] +' ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group 
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			messageSent = True
+	else:
+		form = TvorForm
+	return render(request, 'news/tvor.html',{'form':form,'messageSent': messageSent})
 
 
 def sport(request):
@@ -112,8 +132,42 @@ def mass(request):
 
 def trud(request):
     posts = Post.objects.all()
+    truds = Trud.objects.filter(otobr=True)
+    volonts = Volant.objects.filter(otobr=True)
     your_zapisi = Post.objects.filter(zapisi=request.user.id) 
-    return render(request, 'news/trud.html', {'posts': posts,'your_zapisi':your_zapisi})
+    return render(request, 'news/trud.html', {'posts': posts,'your_zapisi':your_zapisi,'truds':truds,'volonts': volonts})
+
+def trud_naprav(request,pk):
+	trud = get_object_or_404(Trud, pk=pk)
+	messageSent = False
+	if request.method == 'POST':
+		form = zapis_consult(request.POST)
+		if form.is_valid(): 
+			initial = {'trud': trud.pk}
+			subject = 'ЗАПИСЬ на трудовое направление '  
+			message = 'ЗАПИСЬ на '+ trud.name +' ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group 
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			messageSent = True
+	else:
+		form = zapis_consult
+	return render(request, 'news/trud_napr.html',{'messageSent': messageSent})
+
+
+def volon_naprav(request,pk):
+	volont = get_object_or_404(Volant, pk=pk) 
+	messageSent = False
+	if request.method == 'POST':
+		form = zapis_consult(request.POST)
+		if form.is_valid(): 
+			initial = {'volont': volont.pk}
+			subject = 'ЗАПИСЬ на волонтерское направление '  
+			message = 'ЗАПИСЬ на '+ volont.name +' ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group 
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			messageSent = True
+	else:
+		form = zapis_consult
+	return render(request, 'news/volon_zap.html',{'messageSent': messageSent})	
+
 
 
 def otz(request):
@@ -128,12 +182,12 @@ def sec(request,pk):
 		if form.is_valid(): 
 			initial = {'section': section.pk}
 			subject = 'ЗАПИСЬ на секцию '  
-			message = 'ЗАПИСЬ на '+ section.name +' ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			message = 'ЗАПИСЬ на '+ section.name +' ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group 
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
 	else:
 		form = zapis_consult
-	return render(request, 'news/sec.html')
+	return render(request, 'news/sec.html',{'messageSent': messageSent})
 
 
 def consult(request):
@@ -156,7 +210,7 @@ def zap_consult(request, pk):
 		if form.is_valid(): 
 			initial = {'consult': consult.pk}
 			subject = 'ЗАПИСЬ на консультацию '  
-			message = 'ЗАПИСЬ на '+ str(consult.eventdate) +' '+ consult.eventtime + ' : ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			message = 'ЗАПИСЬ на '+ str(consult.eventdate) +' '+ consult.eventtime + ' : ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+ ' ' +request.user.group
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
 			consult.zan = True
@@ -252,8 +306,8 @@ def zapis(request, pk):
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
-			subject = post.content + ' ЗАПИСЬ ' 
-			message = 'ЛИЧНАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			subject = post.name + ' ЗАПИСЬ ' 
+			message = 'ЛИЧНАЯ ЗАПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
 			post.zapisi.add(request.user.id)
@@ -271,7 +325,7 @@ def zapisg(request, pk):
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
-			subject = post.content + ' ЗАПИСЬ ' 
+			subject = post.name + ' ЗАПИСЬ ' 
 			message = 'ГРУППОВАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
@@ -290,8 +344,8 @@ def otpis(request, pk):
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
-			subject = post.content + ' ОТПИСЬ ' 
-			message = 'ЛИЧНАЯ ОТПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num + ' ' + request.user.email
+			subject = post.name + ' ОТПИСЬ ' 
+			message = 'ЛИЧНАЯ ОТПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num + ' ' + request.user.email+ ' ' +request.user.group
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
 			post.zapisi.remove(request.user.id)
@@ -309,7 +363,7 @@ def otpisg(request, pk):
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
-			subject = post.content + ' ОТПИСЬ ' 
+			subject = post.name + ' ОТПИСЬ ' 
 			message = 'ГРУППОВАЯ ОТПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
