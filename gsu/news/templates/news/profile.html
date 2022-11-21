@@ -47,15 +47,19 @@
 	<div>
 		{% if posts %}
 			{% for post in posts %}
-				{% if a <  post.eventdate|date  %}
+				{% if a <  post.eventdate  %}
 					<div class="post">		
 						<div class="post-content">
 							Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
 							{{ post.name}}<br>{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
 							Количество свободных мест: {{ post.mesta }}<br>
-							Цена: {{ post.stoim }}<br>	
+							Цена: {{ post.stoim }}<br>
+							{% if b == post.eventdate %}
+								Нельзя отписаться
+							{% else %}
 								<a href="{% url 'news:otpis' pk=post.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
 								<a href="{% url 'news:otpisg' pk=post.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a>
+							{% endif %}
 							{% if post.image %}
 								<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
 							{% endif %}

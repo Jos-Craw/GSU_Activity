@@ -1,7 +1,7 @@
 from django.contrib import admin
 import datetime
 
-from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant
+from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant,Vist
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -73,3 +73,11 @@ class VolantAdmin(admin.ModelAdmin):
     fields = ('name','otobr')
 
 admin.site.register(Volant, VolantAdmin)
+
+class VistAdmin(admin.ModelAdmin):
+    list_display = ('name', 'content', 'author', 'image','stoim','eventtime','eventdate')
+    list_display_links = ('content','name',)
+    search_fields = ('name', 'content', 'author', 'image','stoim','eventtime','eventdate','zapisiv')
+    fields = ('name', 'content', 'author', 'image','stoim','eventtime','eventdate','zapisiv')
+
+admin.site.register(Vist, VistAdmin)

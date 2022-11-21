@@ -79,7 +79,7 @@ class Post(models.Model):
     class Meta:
         verbose_name_plural = 'События'
         verbose_name = 'Событие'
-        ordering = ['-pubdate']
+        ordering = ['eventdate']
 
     def filename(self):
         return os.path.basename(self.file.name)
@@ -129,6 +129,32 @@ class Volant(models.Model):
     class Meta:
         verbose_name_plural = 'Волонтерские направления'
         verbose_name = 'Волонтерское направление'
+
+
+class Vist(models.Model):
+    time = (
+         ('10:00','10:00'),
+         ('11:00','11:00'),
+         ('12:00','12:00'),
+         ('13:00','13:00'),
+         ('14:00','14:00'),
+         ('15:00','15:00'),
+         ('16:00','16:00'),
+        )
+
+    name = models.CharField(null=True, blank=False,max_length=100)
+    content = models.TextField(null=True, blank=False)
+    image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, null=True)
+    author = models.ForeignKey(AdvUser, on_delete=models.CASCADE, null=True)
+    eventtime = models.CharField(choices=time,blank=False,max_length=10)
+    eventdate = models.DateField(db_index=True,null=True,blank=False)
+    stoim = models.CharField(null = True, blank = False, max_length=10)
+    zapisiv = models.ManyToManyField(AdvUser, related_name='Записи',blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Выставки'
+        verbose_name = 'Выставка'
+
 
 user_registrated = Signal(['instance'])
 

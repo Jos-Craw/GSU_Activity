@@ -15,9 +15,19 @@
 			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
 			Количество свободных мест: {{ post.mesta }}<br>
 			Цена: {{ post.stoim }}<br>
-			{% if post.eventdate|date > a %}
-				<a href="{% url 'news:zapis' pk=post.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a><br>
-				<a href="{% url 'news:zapisg' pk=post.pk %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a><br>
+			{% if a <  post.eventdate  %}
+				<a href="{% url 'news:zapis' pk=post.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
+				{% if b == post.eventdate %}
+				Нельзя отписаться<br>
+				{% else %}
+				<a href="{% url 'news:otpis' pk=post.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+				{% endif %}
+				<a href="{% url 'news:zapisg' pk=post.pk %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/
+				{% if b == post.eventdate %}
+				Нельзя отписаться<br>
+				{% else %}
+				<a href="{% url 'news:otpisg' pk=post.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a><br>
+				{% endif %}
 				{% if post in your_zapisi %}
 					Вы записаны<br>
 				{% endif %}
@@ -43,6 +53,9 @@
 			{% endif %}
 		</div>
 	</div>
+	{% if messageSent %}
+		Отзыв опубликуется после модерации
+	{% endif %}
 		<form method="post">
 			{% csrf_token %}
 			{{ form.as_p }}
@@ -56,5 +69,6 @@
 			</div>
 			{% endfor %}
 		{% endif %}
+
 </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant
+from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant, Vist
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -16,9 +16,12 @@ from django.conf import settings
 from datetime import datetime, timedelta, date
 
 def index(request):
-	posts = Post.objects.all()
-	your_zapisi = Post.objects.filter(zapisi=request.user.id)
-	dat = None
+	nach = date.today() - timedelta(days=3)
+	con = date.today() + timedelta(days=3)
+	nach = nach.strftime('%Y-%m-%d')
+	con = con.strftime('%Y-%m-%d')
+	print(nach)
+	posts = Post.objects.filter(eventdate__range=(nach,con))
 	if request.method == 'POST':
 		form = Index(request.POST)
 		if form.is_valid():
@@ -27,14 +30,15 @@ def index(request):
 			posts = Post.objects.filter(eventdate__range=(nach,con))
 	else:
 		form = Index()
-	return render(request, 'news/index.html', {'form': form,'posts': posts,'your_zapisi':your_zapisi})
+	return render(request, 'news/index.html', {'form': form,'posts': posts})
 
 @login_required
 def profile(request):
     posts = Post.objects.filter(zapisi=request.user.id)
     your_posts = Post.objects.filter(author=request.user.pk)
-    a = date.today().strftime('%d %B %Y')
-    return render(request, 'news/profile.html', {'posts': posts,'your_posts':your_posts,'a':a})
+    a = date.today()
+    b = a + timedelta(days=1)
+    return render(request, 'news/profile.html', {'posts': posts,'your_posts':your_posts,'a':a,'b':b})
 
 @login_required
 def create(request):
@@ -70,13 +74,14 @@ def deletepost(request, pk):
 
 @login_required
 def detail(request, pk):
-	a = date.today().strftime('%d %B %Y')
 	your_zapisi = Post.objects.filter(zapisi=request.user.id)
 	messageSent = False
 	post = get_object_or_404(Post, pk=pk)
 	comments = Comment.objects.filter(post=pk,moderation=True)
 	initial = {'post': post.pk}
 	initial['author'] = request.user.first_name + ' ' + request.user.last_name
+	a = date.today()
+	b = a + timedelta(days=1)
 	form_class = CommentForm
 	form = form_class(initial=initial)
 	if request.method == 'POST' or request.FILES:
@@ -92,7 +97,7 @@ def detail(request, pk):
 			message = 'Зайдите на сайт для одобрения комментария: '+cd['content'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
 			messageSent = True
-	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent,'your_zapisi':your_zapisi,'a':a})
+	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent,'your_zapisi':your_zapisi,'a':a,'b':b})
 
 
 def cult(request):
@@ -129,8 +134,8 @@ def sport(request):
 def mass(request):
     posts = Post.objects.all()
     your_zapisi = Post.objects.filter(zapisi=request.user.id) 
-    return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi})
-
+    vists = Vist.objects.all()
+    return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'vists':vists})
 
 def trud(request):
     posts = Post.objects.all()
