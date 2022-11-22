@@ -161,11 +161,15 @@ def volon_naprav(request,pk):
 	messageSent = False
 	if request.method == 'POST':
 		form = zapis_consult(request.POST)
-		if form.is_valid(): 
+		if form.is_valid():
+			if volont.name == 'Профсоюз':
+				email = 'novogencev.pavel@gmail.com' #AZYAVCHIKOV@gsu.by
+			else:
+				email = 'novogencev.pavel@gmail.com' #FEDORENKO@gsu.by
 			initial = {'volont': volont.pk}
 			subject = 'ЗАПИСЬ на волонтерское направление '  
 			message = 'ЗАПИСЬ на '+ volont.name +' ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group 
-			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #волонтер – FEDORENKO@gsu.by, профсоюз – AZYAVCHIKOV@gsu.by
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 	else:
 		form = zapis_consult
@@ -307,12 +311,21 @@ def zapis(request, pk):
 	if request.method == 'POST':
 		form = Subscribe(request.POST)
 		if form.is_valid():
+			if post.vist == True:
+				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
+			elif post.tag == 'Культурно-досуговая деятельность':
+				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
+			elif post.tag == 'Спортивная деятельность':
+				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by
+			elif post.tag == 'Массовые мероприятия и выставки':
+				email = 'novogencev.pavel@gmail.com' #osnach@gsu.by,bardashevich@gsu.by
+			elif post.tag == 'Трудовая и волонтерская деятельность':
+				email = 'novogencev.pavel@gmail.com' #FEDORENKO@gsu.by
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
 			subject = post.name + ' ЗАПИСЬ ' 
 			message = 'ЛИЧНАЯ ЗАПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group
-			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #выставки - LVDUBROVSKAYA@gsu.by VELIKY@gsu.by KULESHOV@gsu.by osnach@gsu.by bardashevich@gsu.by FEDORENKO@gsu.by TROSHEVA@gsu.by
-
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapisi.add(request.user.id)
 			post.mesta = post.mesta -1
