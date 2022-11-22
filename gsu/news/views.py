@@ -3,7 +3,7 @@ from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm,Subscribeg,TvorForm
+from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm,Subscribeg,TvorForm,VistForm
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
@@ -45,6 +45,18 @@ def create(request):
             return redirect('news:index')
     else:
         form = PostForm(initial={'author': request.user.pk})
+    context = {'form': form}
+    return render(request, 'news/create.html', context)
+
+@login_required
+def create_v(request):
+    if request.method == 'POST' or request.FILES:
+        form = VistForm(request.POST, request.FILES)
+        if form.is_valid():
+        	vist = form.save()
+        	return redirect('news:index')
+    else:
+        form = VistForm(initial={'author': request.user.pk})
     context = {'form': form}
     return render(request, 'news/create.html', context)
 
@@ -313,13 +325,13 @@ def zapis(request, pk):
 		if form.is_valid():
 			if post.vist == True:
 				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
-			elif post.tag == 'Культурно-досуговая деятельность':
+			elif post.tags == 'cult':
 				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
-			elif post.tag == 'Спортивная деятельность':
+			elif post.tags == 'sport':
 				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by
-			elif post.tag == 'Массовые мероприятия и выставки':
+			elif post.tags == 'mass':
 				email = 'novogencev.pavel@gmail.com' #osnach@gsu.by,bardashevich@gsu.by
-			elif post.tag == 'Трудовая и волонтерская деятельность':
+			elif post.tags == 'trud':
 				email = 'novogencev.pavel@gmail.com' #FEDORENKO@gsu.by
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
@@ -340,11 +352,21 @@ def zapisg(request, pk):
 	if request.method == 'POST':
 		form = Subscribeg(request.POST)
 		if form.is_valid():
+			if post.vist == True:
+				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
+			elif post.tags == 'cult':
+				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
+			elif post.tags == 'sport':
+				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by
+			elif post.tags == 'mass':
+				email = 'novogencev.pavel@gmail.com' #osnach@gsu.by,bardashevich@gsu.by
+			elif post.tags == 'trud':
+				email = 'novogencev.pavel@gmail.com' #FEDORENKO@gsu.by
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
 			subject = post.name + ' ЗАПИСЬ ' 
 			message = 'ГРУППОВАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
-			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapisi.add(request.user.id)
 			post.mesta = post.mesta - cd['colvo']
@@ -359,11 +381,21 @@ def otpis(request, pk):
 	if request.method == 'POST':
 		form = Subscribe(request.POST)
 		if form.is_valid():
+			if post.vist == True:
+				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
+			elif post.tags == 'cult':
+				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
+			elif post.tags == 'sport':
+				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by
+			elif post.tags == 'mass':
+				email = 'novogencev.pavel@gmail.com' #osnach@gsu.by,bardashevich@gsu.by
+			elif post.tags == 'trud':
+				email = 'novogencev.pavel@gmail.com' #FEDORENKO@gsu.by
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
 			subject = post.name + ' ОТПИСЬ ' 
 			message = 'ЛИЧНАЯ ОТПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num + ' ' + request.user.email+ ' ' +request.user.group
-			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapisi.remove(request.user.id)
 			post.mesta = post.mesta +1
@@ -378,11 +410,21 @@ def otpisg(request, pk):
 	if request.method == 'POST':
 		form = Subscribeg(request.POST)
 		if form.is_valid():
+			if post.vist == True:
+				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
+			elif post.tags == 'cult':
+				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
+			elif post.tags == 'sport':
+				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by
+			elif post.tags == 'mass':
+				email = 'novogencev.pavel@gmail.com' #osnach@gsu.by,bardashevich@gsu.by
+			elif post.tags == 'trud':
+				email = 'novogencev.pavel@gmail.com' #FEDORENKO@gsu.by
 			cd = form.cleaned_data
 			initial = {'post': post.pk}
 			subject = post.name + ' ОТПИСЬ ' 
 			message = 'ГРУППОВАЯ ОТПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
-			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com'])
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapisi.remove(request.user.id)
 			post.mesta = post.mesta + cd['colvo']

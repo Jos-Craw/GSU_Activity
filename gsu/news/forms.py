@@ -90,6 +90,7 @@ class PostForm(ModelForm):
 class TvorForm(forms.Form):
     Роль = forms.ChoiceField(choices=(("Артист", "Артист"), ("Организатор", "Организатор")))
 
+class VistForm(ModelForm):
     time = (
          ('10:00','10:00'),
          ('11:00','11:00'),
@@ -99,3 +100,11 @@ class TvorForm(forms.Form):
          ('15:00','15:00'),
          ('16:00','16:00'),
         )
+    eventdate = forms.DateTimeField(widget=forms.SelectDateWidget)
+    eventtime = forms.ChoiceField(choices=time)
+    vist = forms.BooleanField(label='Выставка',initial=True)
+    tags = forms.CharField(initial='mass')
+    class Meta:
+        model = Post
+        fields = '__all__'
+        widgets = {'author': forms.HiddenInput, 'zapisi':forms.HiddenInput}
