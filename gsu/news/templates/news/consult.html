@@ -16,7 +16,6 @@
 	{% endif %}
 	{% if consults %}
 		{% for consult in consults %}
-			{% if consult.zan == False %}
 				<div class="post">
 					{{ consult.eventdate }}<br>
 					{{ consult.get_eventtime_display }}<br>
@@ -24,7 +23,6 @@
 						<a href="{% url 'news:zap_consult' pk=consult.pk %}" class="link">Выбрать</a>
 					{% endif %}
 				</div><br>
-			{% endif %}
 		{% endfor %}
 	{% else %}
 		Записей нет<br><br>

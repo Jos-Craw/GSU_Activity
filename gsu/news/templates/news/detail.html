@@ -16,6 +16,9 @@
 			Количество свободных мест: {{ post.mesta }}<br>
 			Цена: {{ post.stoim }}<br>
 			{% if a <  post.eventdate  %}
+				{% if post.mesta == 0 %}
+				Нет мест<br>
+				{% else %}
 				<a href="{% url 'news:zapis' pk=post.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
 				{% if b == post.eventdate %}
 				Нельзя отписаться<br>
@@ -30,6 +33,7 @@
 				{% endif %}
 				{% if post in your_zapisi %}
 					Вы записаны<br>
+				{% endif %}
 				{% endif %}
 			{% else %}
 				Мероприятие прошло<br>

@@ -8,7 +8,6 @@
 		{{ form.as_p }}
 		<button type="submit">Выбрать</button>
 	</form>
-	События на этой неделе
 </div>
 {% if posts %}
 {% for post in posts %}
@@ -22,6 +21,9 @@
 					<a href="{% url 'news:sport' %}" class="link">{{ post.get_tags_display}}</a><br>
 					{% elif post.tags == 'mass' %}
 					<a href="{% url 'news:mass' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% if post.vist == True %}
+					Выставка <br>
+					{% endif %}
 					{% elif post.tags == 'trud' %}
 					<a href="{% url 'news:trud' %}" class="link">{{ post.get_tags_display}}</a><br>
 					{% endif %}

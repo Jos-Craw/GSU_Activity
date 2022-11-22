@@ -1,15 +1,15 @@
 from django.contrib import admin
 import datetime
 
-from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant,Vist
+from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id','name', 'content', 'author', 'pubdate','tags', 'image','stoim','mesta', 'file', 'video', 'audio','eventtime','eventdate')
+    list_display = ('id','name', 'content', 'author', 'pubdate','tags', 'image','stoim','mesta', 'file', 'video', 'audio','eventtime','eventdate','vist')
     list_display_links = ('content','name',)
-    search_fields = ('name','content', 'author','tags','eventtime','eventdate','stoim','mesta', 'image', 'file', 'video', 'audio','zapisi')
+    search_fields = ('name','content', 'author','tags','eventtime','eventdate','stoim','mesta', 'image', 'file', 'video', 'audio','zapisi','vist')
     date_hierarchy = 'pubdate'
-    fields = ('name','author','tags', 'content','eventtime','eventdate', 'image','stoim','mesta', 'file', 'video', 'audio','zapisi')
+    fields = ('name','author','tags', 'content','eventtime','eventdate', 'image','stoim','mesta', 'file', 'video', 'audio','zapisi','vist')
 
 
 admin.site.register(Post, PostAdmin)
@@ -73,11 +73,3 @@ class VolantAdmin(admin.ModelAdmin):
     fields = ('name','otobr')
 
 admin.site.register(Volant, VolantAdmin)
-
-class VistAdmin(admin.ModelAdmin):
-    list_display = ('name', 'content', 'author', 'image','stoim','eventtime','eventdate')
-    list_display_links = ('content','name',)
-    search_fields = ('name', 'content', 'author', 'image','stoim','eventtime','eventdate','zapisiv')
-    fields = ('name', 'content', 'author', 'image','stoim','eventtime','eventdate','zapisiv')
-
-admin.site.register(Vist, VistAdmin)

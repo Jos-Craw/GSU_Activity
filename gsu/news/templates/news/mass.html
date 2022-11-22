@@ -6,19 +6,6 @@
 {% if user.id == 6 or user.id == 1  %}
 		<a href="{% url 'news:add' %}"  class="link">Создать событие</a><br>
 {% endif %}
-{% if vists %}
-{% for vist in vists %}
-	<div class="post">
-		<div class="post-content">
-			{{ vist.name}}<br> {{ vist.eventtime }} {{ vist.eventdate }}<br>
-			Цена: {{ vist.stoim }}<br>
-			{% if vist.image %}
-				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
-			{% endif %}
-		</div>
-	</div>
-{% endfor %}
-{% endif %}
 {% if posts %}
 {% for post in posts %}
 {% if post.tags == 'mass' %}
@@ -28,6 +15,9 @@
 			    <div>
 					{% if post.tags == 'mass' %}
 					<a href="{% url 'news:mass' %}" class="link">{{ post.get_tags_display}}</a><br>
+					{% if post.vist == True %}
+					Выставка <br>
+					{% endif %}
 					{% endif %}
 					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}
 				</div>
