@@ -7,8 +7,34 @@
 		<a href="{% url 'news:add' %}"  class="link">Создать событие</a><br>
 		<a href="{% url 'news:add_v' %}"  class="link">Добавить выставку</a><br>
 {% endif %}
+
 {% if vists %}
-{% for post in vists %}
+{% for vist in vists %}
+	<div class="post">
+		<div class="post-author">
+			<div class="post-author-a">
+			    <div>
+					Выставка <br>
+					Дата публикации: {{ vist.pubdate|date:"d M Y H:i" }}
+				</div>
+			</div>
+			<div class="post-author-b">
+				<a href="{% url 'news:detail_v' pk=vist.pk %}" class="link">⋮</a>
+			</div>
+		</div>
+		<div class="post-content">
+			{{ vist.name}}<br>
+			Цена: {{ vist.stoim }}<br>
+			{% if vist.image %}
+				<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>
+			{% endif %}
+		</div>
+	</div>
+{% endfor %}
+{% endif %}
+
+{% if posts %}
+{% for post in posts %}
 {% if post.tags == 'mass' %}
 	<div class="post">
 		<div class="post-author">
@@ -19,38 +45,6 @@
 					{% if post.vist == True %}
 					Выставка <br>
 					{% endif %}
-					{% endif %}
-				</div>
-			</div>
-			<div class="post-author-b">
-				<a href="{% url 'news:detail' pk=post.pk %}" class="link">⋮</a>
-			</div>
-		</div>
-		<div class="post-content">
-			{{ post.name}}<br> {{ post.eventtime }} {{ post.eventdate }}<br>
-			Цена: {{ post.stoim }}<br>
-			{% if user.is_authenticated %}
-				{% if post in your_zapisi %}
-					Вы записаны<br>
-				{% endif %}
-			{% endif %}
-			{% if post.image %}
-				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
-			{% endif %}
-		</div>
-	</div>
-{% endif %}
-{% endfor %}
-{% endif %}
-{% if posts %}
-{% for post in posts %}
-{% if post.tags == 'mass' %}
-	<div class="post">
-		<div class="post-author">
-			<div class="post-author-a">
-			    <div>
-					{% if post.tags == 'mass' %}
-					<a href="{% url 'news:mass' %}" class="link">{{ post.get_tags_display}}</a><br>
 					{% endif %}
 					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}
 				</div>

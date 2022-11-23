@@ -45,7 +45,20 @@
 		Ваши записи:<br>
 	</div>
 	<div>
-		{% if posts %}
+		{% if posts or vists%}
+			{% for vist in vists %}
+					<div class="post">		
+						<div class="post-content">
+							{{ vist.name}}<br>{{ vist.content}}<br>
+							Цена: {{ vist.stoim }}<br>
+								<a href="{% url 'news:otpis' pk=vist.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+								<a href="{% url 'news:otpisg' pk=vist.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a>
+							{% if vist.image %}
+								<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>
+							{% endif %}
+						</div>
+					</div>		
+			{% endfor %}
 			{% for post in posts %}
 				{% if a <  post.eventdate  %}
 					<div class="post">		

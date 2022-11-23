@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant
+from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant, Vist, Event
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -31,10 +31,11 @@ def index(request):
 @login_required
 def profile(request):
     posts = Post.objects.filter(zapisi=request.user.id)
+    vists = Vist.objects.filter(zapisi=request.user.id)
     your_posts = Post.objects.filter(author=request.user.pk)
     a = date.today()
     b = a + timedelta(days=1)
-    return render(request, 'news/profile.html', {'posts': posts,'your_posts':your_posts,'a':a,'b':b})
+    return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b})
 
 @login_required
 def create(request):
@@ -53,8 +54,8 @@ def create_v(request):
 	if request.method == 'POST' or request.FILES:
 		form = VistForm(request.POST, request.FILES)
 		if form.is_valid():
-			form.save()
-			return redirect('news:index')
+			vist = form.save()
+		return redirect('news:index')
 	else:
 		form = VistForm(initial={'author': request.user.pk})
 	context = {'form': form}
@@ -107,6 +108,33 @@ def detail(request, pk):
 			messageSent = True
 	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent,'your_zapisi':your_zapisi,'a':a,'b':b})
 
+@login_required
+def detail_v(request, pk):
+	messageSent = False
+	vist = get_object_or_404(Vist, pk=pk)
+	comments = Comment.objects.filter(vist=pk,moderation=True)
+	initial = {'vist': vist.pk}
+	initial['author'] = request.user.first_name + ' ' + request.user.last_name
+	a = date.today()
+	b = a + timedelta(days=1)
+	form_class = CommentForm
+	form = form_class(initial=initial)
+	if request.method == 'POST' or request.FILES:
+		form = CommentForm(request.POST)
+		c_form = form_class(request.POST, request.FILES)
+		if c_form.is_valid():
+			c_form.save()
+		else:
+			form = c_form
+		if form.is_valid():
+			cd = form.cleaned_data
+			subject = 'НОВЫЙ КОММЕНТАРИЙ'
+			message = 'Зайдите на сайт для одобрения комментария: '+cd['content'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #hodanovich@gsu.by, osnach@gsu.by
+			messageSent = True
+	return render(request, 'news/detail_v.html', {'vist': vist, 'comments': comments, 'form': form,'messageSent': messageSent,'a':a,'b':b})
+
+
 
 def cult(request):
     posts = Post.objects.all()
@@ -140,11 +168,10 @@ def sport(request):
 
 
 def mass(request):
-	a = date.today()
-	posts = Post.objects.filter(vist=False)
-	vists = Post.objects.filter(vist=True,zapisi=None)
+	posts = Post.objects.all()
+	vists = Vist.objects.all()
 	your_zapisi = Post.objects.filter(zapisi=request.user.id) 
-	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'a':a,'vists':vists})
+	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'vists':vists})
 
 def trud(request):
     posts = Post.objects.all()
@@ -324,9 +351,7 @@ def zapis(request, pk):
 	if request.method == 'POST':
 		form = Subscribe(request.POST)
 		if form.is_valid():
-			if post.vist == True:
-				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
-			elif post.tags == 'cult':
+			if post.tags == 'cult':
 				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
 			elif post.tags == 'sport':
 				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by
@@ -352,10 +377,8 @@ def zapisg(request, pk):
 	messageSent = False
 	if request.method == 'POST':
 		form = Subscribeg(request.POST)
-		if form.is_valid():
-			if post.vist == True:
-				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
-			elif post.tags == 'cult':
+		if form.is_valid(): #LVDUBROVSKAYA@gsu.by
+			if post.tags == 'cult':
 				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
 			elif post.tags == 'sport':
 				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by
@@ -382,9 +405,7 @@ def otpis(request, pk):
 	if request.method == 'POST':
 		form = Subscribe(request.POST)
 		if form.is_valid():
-			if post.vist == True:
-				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
-			elif post.tags == 'cult':
+			if post.tags == 'cult':
 				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
 			elif post.tags == 'sport':
 				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by
@@ -411,9 +432,7 @@ def otpisg(request, pk):
 	if request.method == 'POST':
 		form = Subscribeg(request.POST)
 		if form.is_valid():
-			if post.vist == True:
-				email = 'novogencev.pavel@gmail.com' #LVDUBROVSKAYA@gsu.by
-			elif post.tags == 'cult':
+			if post.tags == 'cult':
 				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
 			elif post.tags == 'sport':
 				email = 'novogencev.pavel@gmail.com' #KULESHOV@gsu.by

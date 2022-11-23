@@ -4,7 +4,12 @@
 	{% if comments %}
 			{% for comment in comments %}
 			<div class="comment">
-				{{ comment.post.name}}  {{ comment.post.eventtime }} {{ comment.post.eventdate }}<br>
+				{% if comment.post.name %}
+				{{ comment.post.name}}<br>
+				{{ comment.post.eventtime }} {{ comment.post.eventdate }}<br>
+				{% else %}
+				{{ comment.vist.name }}<br>
+				{% endif %}
 				{{ comment.author }} {{ comment.pubdate|date:"d M Y H:i" }}<br>
 				{{ comment.content|urlize }}<br>
 			</div>

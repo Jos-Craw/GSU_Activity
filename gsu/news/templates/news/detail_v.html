@@ -6,38 +6,52 @@
 		<div class="post-author">
 			<div class="post-author-a">
 				<div>
-					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}
+					Дата публикации: {{ vist.pubdate|date:"d M Y H:i" }}
 				</div>
 			</div>
 		</div>
 		<div class="post-content">
-			{{ post.name}}<br>
-			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
-			Количество свободных мест: {{ post.mesta }}<br>
-			Цена: {{ post.stoim }}<br>
-			{% if a <  post.eventdate  %}
-				{% if post.mesta == 0 %}
-				Нет мест<br>
-				{% else %}
-				<a href="{% url 'news:zapis' pk=post.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
-				{% if b == post.eventdate %}
-				Нельзя отписаться<br>
-				{% else %}
-				<a href="{% url 'news:otpis' pk=post.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-				{% endif %}
-				<a href="{% url 'news:zapisg' pk=post.pk %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/
-				{% if b == post.eventdate %}
-				Нельзя отписаться<br>
-				{% else %}
-				<a href="{% url 'news:otpisg' pk=post.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a><br>
-				{% endif %}
-				{% if post in your_zapisi %}
-					Вы записаны<br>
-				{% endif %}
-				{% endif %}
-			{% else %}
-				Мероприятие прошло<br>
+			{{ vist.name}}<br>
+			{{ vist.content}}<br>
+			Цена: {{ vist.stoim }}<br>
+			{% if vist.image %}
+				<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>
 			{% endif %}
+			{% if vist.video %}
+				<video src="{{ vist.video.url }}" class="media" controls="controls"></video><br>
+			{% endif %}
+			{% if vist.audio %}
+				<audio src="{{ vist.audio.url }}" controls="controls"></audio><br>
+			{% endif %}
+			{% if vist.file %}
+				<a href='{{ vist.file.url }}' target="-blank" class="file">{{vist.filename}}</a><br>
+			{% endif %}
+			{% if user.is_superuser == 1 %}
+				<a href="{% url 'news:delete_post' pk=vist.pk %}"  class="link">Delete</a>
+			{% endif %}
+			{% if user.is_authenticated %}
+			{% endif %}
+		</div>
+		<div>
+			{% for event in vist.event.all %}
+				{{ event.eventdate }}<br>
+				{{ event.eventtime }}<br>
+				{% if a <  event.eventdate  %}
+				<a href="{% url 'news:zapis' pk=vist.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
+				{% if b == event.eventdate %}
+				Нельзя отписаться<br>
+				{% else %}
+				<a href="{% url 'news:otpis' pk=vist.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+				{% endif %}
+				<a href="{% url 'news:zapisg' pk=vist.pk %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/
+				{% if b == event.eventdate %}
+				Нельзя отписаться<br>
+				{% else %}
+				<a href="{% url 'news:otpisg' pk=vist.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a><br><br>
+				{% endif %}
+				{% else %}
+					Мероприятие прошло<br>
+				{% endif %}
 			{% if post.image %}
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
 			{% endif %}
@@ -55,6 +69,7 @@
 			{% endif %}
 			{% if user.is_authenticated %}
 			{% endif %}
+			{% endfor %}
 		</div>
 	</div>
 	{% if messageSent %}

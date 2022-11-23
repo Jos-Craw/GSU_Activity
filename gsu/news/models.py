@@ -75,7 +75,6 @@ class Post(models.Model):
     mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)]) 
     tags = models.CharField( blank = False,choices=tag, max_length=50)
     zapisi = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True)
-    vist = models.BooleanField(default=False, db_index=True,verbose_name='Выставка')
 
     class Meta:
         verbose_name_plural = 'События'
@@ -85,9 +84,32 @@ class Post(models.Model):
     def filename(self):
         return os.path.basename(self.file.name)
 
+class Event(models.Model):
+    eventtime = models.TimeField(db_index=True,null=True,blank=False)
+    eventdate = models.DateField(db_index=True,null=True,blank=False)
+    zan = models.BooleanField(default=False, db_index=True,verbose_name='Занято')
+
+class Vist(models.Model):
+    name = models.CharField(null=True, blank=False,max_length=100)
+    content = models.TextField(null=True, blank=False)
+    image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, null=True)
+    file = models.FileField(upload_to='files/%Y/%m/%d/', blank=True, null=True)
+    video = models.FileField(upload_to='video/%Y/%m/%d/', blank=True, null=True)
+    audio = models.FileField(upload_to='audio/%Y/%m/%d/', blank=True, null=True)
+    author = models.ForeignKey(AdvUser, on_delete=models.CASCADE, null=True)
+    pubdate = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Publication date')
+    stoim = models.CharField(null = True, blank = False, max_length=10)
+    event = models.ManyToManyField(Event,related_name='Даты',blank=True)
+    zapisi = models.ManyToManyField(AdvUser, related_name='Записи',blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Выставки'
+        verbose_name = 'Выставка'
+        ordering = ['pubdate']
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True ,null=True)
+    vist = models.ForeignKey(Vist, on_delete=models.CASCADE, blank=True , null=True)
     content = models.TextField(null=True, blank=False)
     author = models.CharField(max_length=30)
     pubdate = models.DateTimeField(auto_now_add=True, db_index=True)

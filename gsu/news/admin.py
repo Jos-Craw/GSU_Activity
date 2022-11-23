@@ -1,26 +1,42 @@
 from django.contrib import admin
 import datetime
 
-from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant
+from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant , Vist, Event
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id','name', 'content', 'author', 'pubdate','tags', 'image','stoim','mesta', 'file', 'video', 'audio','eventtime','eventdate','vist')
+    list_display = ('id','name', 'content', 'author', 'pubdate','tags', 'image','stoim','mesta', 'file', 'video', 'audio','eventtime','eventdate')
     list_display_links = ('content','name',)
-    search_fields = ('name','content', 'author','tags','eventtime','eventdate','stoim','mesta', 'image', 'file', 'video', 'audio','zapisi','vist')
+    search_fields = ('name','content', 'author','tags','eventtime','eventdate','stoim','mesta', 'image', 'file', 'video', 'audio','zapisi')
     date_hierarchy = 'pubdate'
-    fields = ('name','author','tags', 'content','eventtime','eventdate', 'image','stoim','mesta', 'file', 'video', 'audio','zapisi','vist')
+    fields = ('name','author','tags', 'content','eventtime','eventdate', 'image','stoim','mesta', 'file', 'video', 'audio','zapisi')
 
 
 admin.site.register(Post, PostAdmin)
 
+class VistAdmin(admin.ModelAdmin):
+    list_display = ('id','name', 'content', 'author', 'pubdate', 'image','stoim', 'file', 'video', 'audio')
+    list_display_links = ('content','name',)
+    search_fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event','zapisi')
+    date_hierarchy = 'pubdate'
+    fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event','zapisi')
+
+
+admin.site.register(Vist, VistAdmin)
+
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('eventtime','eventdate','zan')
+    search_fields = ('eventtime','eventdate','zan')
+    fields = ('eventtime','eventdate','zan')
+
+admin.site.register(Event, EventAdmin)
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('content', 'author', 'pubdate', 'post', 'moderation')
+    list_display = ('content', 'author', 'pubdate', 'post','vist', 'moderation')
     list_display_links = ('content',)
     search_fields = ('content', 'author')
     date_hierarchy = 'pubdate'
-    fields = ('author', 'content', 'post', 'moderation')
+    fields = ('author', 'content', 'post','vist', 'moderation')
 
 
 admin.site.register(Comment, CommentAdmin)
