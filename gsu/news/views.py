@@ -50,15 +50,15 @@ def create(request):
 
 @login_required
 def create_v(request):
-    if request.method == 'POST' or request.FILES:
-        form = VistForm(request.POST, request.FILES)
-        if form.is_valid():
-        	vist = form.save()
-        	return redirect('news:index')
-    else:
-        form = VistForm(initial={'author': request.user.pk})
-    context = {'form': form}
-    return render(request, 'news/create.html', context)
+	if request.method == 'POST' or request.FILES:
+		form = VistForm(request.POST, request.FILES)
+		if form.is_valid():
+			form.save()
+			return redirect('news:index')
+	else:
+		form = VistForm(initial={'author': request.user.pk})
+	context = {'form': form}
+	return render(request, 'news/create.html', context)
 
 @login_required
 def deletepost(request, pk):
@@ -141,9 +141,10 @@ def sport(request):
 
 def mass(request):
 	a = date.today()
-	posts = Post.objects.all()
+	posts = Post.objects.filter(vist=False)
+	vists = Post.objects.filter(vist=True,zapisi=None)
 	your_zapisi = Post.objects.filter(zapisi=request.user.id) 
-	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'a':a})
+	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'a':a,'vists':vists})
 
 def trud(request):
     posts = Post.objects.all()

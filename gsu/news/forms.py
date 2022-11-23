@@ -100,10 +100,11 @@ class VistForm(ModelForm):
          ('15:00','15:00'),
          ('16:00','16:00'),
         )
-    eventdate = forms.DateTimeField(widget=forms.SelectDateWidget)
+    eventdate = forms.DateField(widget=forms.SelectDateWidget)
     eventtime = forms.ChoiceField(choices=time)
-    vist = forms.BooleanField(label='Выставка',initial=True)
-    tags = forms.CharField(initial='mass')
+    vist = forms.BooleanField(label='Выставка',initial=True,widget=forms.HiddenInput)
+    tags = forms.CharField(initial='mass',widget=forms.HiddenInput)
+    mesta = forms.IntegerField(initial=100,widget=forms.HiddenInput)
     class Meta:
         model = Post
         fields = '__all__'

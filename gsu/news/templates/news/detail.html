@@ -13,7 +13,9 @@
 		<div class="post-content">
 			{{ post.name}}<br>
 			{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
-			Количество свободных мест: {{ post.mesta }}<br>
+			{% if post.vist == False %}
+				Количество свободных мест: {{ post.mesta }}<br>
+			{% endif %}
 			Цена: {{ post.stoim }}<br>
 			{% if a <  post.eventdate  %}
 				{% if post.mesta == 0 %}
