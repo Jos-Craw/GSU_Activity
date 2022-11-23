@@ -37,7 +37,7 @@
 				{{ event.eventdate }}<br>
 				{{ event.eventtime }}<br>
 				{% if a <  event.eventdate  %}
-				<a href="{% url 'news:zapis' pk=vist.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
+				<a href="{% url 'news:zapisv' pk=vist.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
 				{% if b == event.eventdate %}
 				Нельзя отписаться<br>
 				{% else %}
@@ -63,9 +63,6 @@
 			{% endif %}
 			{% if post.file %}
 				<a href='{{ post.file.url }}' target="-blank" class="file">{{post.filename}}</a><br>
-			{% endif %}
-			{% if user.is_superuser == 1 %}
-				<a href="{% url 'news:delete_post' pk=post.pk %}"  class="link">Delete</a>
 			{% endif %}
 			{% if user.is_authenticated %}
 			{% endif %}

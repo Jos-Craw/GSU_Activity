@@ -88,6 +88,7 @@ class Event(models.Model):
     eventtime = models.TimeField(db_index=True,null=True,blank=False)
     eventdate = models.DateField(db_index=True,null=True,blank=False)
     zan = models.BooleanField(default=False, db_index=True,verbose_name='Занято')
+    zapisi = models.ManyToManyField(AdvUser, related_name='Записи',blank=True)
 
 class Vist(models.Model):
     name = models.CharField(null=True, blank=False,max_length=100)
@@ -100,7 +101,6 @@ class Vist(models.Model):
     pubdate = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Publication date')
     stoim = models.CharField(null = True, blank = False, max_length=10)
     event = models.ManyToManyField(Event,related_name='Даты',blank=True)
-    zapisi = models.ManyToManyField(AdvUser, related_name='Записи',blank=True)
 
     class Meta:
         verbose_name_plural = 'Выставки'

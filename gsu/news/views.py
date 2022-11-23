@@ -377,7 +377,7 @@ def zapisg(request, pk):
 	messageSent = False
 	if request.method == 'POST':
 		form = Subscribeg(request.POST)
-		if form.is_valid(): #LVDUBROVSKAYA@gsu.by
+		if form.is_valid(): 
 			if post.tags == 'cult':
 				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
 			elif post.tags == 'sport':
@@ -452,3 +452,22 @@ def otpisg(request, pk):
 	else:
 		form = Subscribeg()
 	return render(request, 'news/otpis.html', {'form': form,'messageSent': messageSent,})
+
+
+def zapisv(request, pk):
+	vist = get_object_or_404(Vist, pk=pk)
+	messageSent = False
+	if request.method == 'POST':
+		form = Subscribe(request.POST)
+		if form.is_valid():
+			cd = form.cleaned_data
+			initial = {'vist': vist.pk}
+			subject = vist.name + ' ЗАПИСЬ ' 
+			message = 'ЛИЧНАЯ ЗАПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #LVDUBROVSKAYA@gsu.by
+			messageSent = True
+			vist.zapisi.add(request.user.id)
+			vist.save()
+	else:
+		form = Subscribe()
+	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent})

@@ -17,17 +17,17 @@ admin.site.register(Post, PostAdmin)
 class VistAdmin(admin.ModelAdmin):
     list_display = ('id','name', 'content', 'author', 'pubdate', 'image','stoim', 'file', 'video', 'audio')
     list_display_links = ('content','name',)
-    search_fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event','zapisi')
+    search_fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event')
     date_hierarchy = 'pubdate'
-    fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event','zapisi')
+    fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event')
 
 
 admin.site.register(Vist, VistAdmin)
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ('eventtime','eventdate','zan')
-    search_fields = ('eventtime','eventdate','zan')
-    fields = ('eventtime','eventdate','zan')
+    search_fields = ('eventtime','eventdate','zan','zapisi')
+    fields = ('eventtime','eventdate','zan','zapisi')
 
 admin.site.register(Event, EventAdmin)
 
