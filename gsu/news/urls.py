@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView
-from .views import index,zap_consult,tvor,volon_naprav,trud_naprav,sec,deletepost,detail_v, create,create_v,zapisv, zapis,zapisg,otpis,otpisg,cult,consult,otz, mass,sport,trud, POSTLoginView, profile, POSTLogoutView, ChangeUserInfoView, POSTChangeView, RegisterUserView, RegisterDoneView, user_activate, DeleteUserView, detail
+from .views import index,zap_consult,tvor,volon_naprav,trud_naprav,sec,deletepost,detail_v,otpisv, otpisgv,zapisgv,create,create_v,zapisv, zapis,zapisg,otpis,otpisg,cult,consult,otz, mass,sport,trud, POSTLoginView, profile, POSTLogoutView, ChangeUserInfoView, POSTChangeView, RegisterUserView, RegisterDoneView, user_activate, DeleteUserView, detail
 
 app_name = 'news'
 
@@ -20,10 +20,13 @@ urlpatterns = [
     path('trud_naprav/<int:pk>/', trud_naprav, name='trud_naprav'),
     path('zapis_consult/<int:pk>/', zap_consult, name='zap_consult'),
     path('zapis/<int:pk>/', zapis, name='zapis'),
-    path('zapisv/<int:pk>/', zapisv, name='zapisv'),
+    path('zapisv/<int:pk1>/<int:pk2>', zapisv, name='zapisv'),
     path('zapisg/<int:pk>/', zapisg, name='zapisg'),
+    path('zapisgv/<int:pk1>/<int:pk2>', zapisgv, name='zapisgv'),
     path('otpis/<int:pk>/', otpis, name='otpis'),
+    path('otpisv/<int:pk1>/<int:pk2>', otpisv, name='otpisv'),
     path('otpisg/<int:pk>/', otpisg, name='otpisg'),
+    path('otpisgv/<int:pk1>/<int:pk2>', otpisgv, name='otpisgv'),
     path('add/', create, name='add'),
     path('add_v/', create_v, name='add_v'),
     path('accounts/register/activate/<str:sign>/', user_activate, name='register_activate'),

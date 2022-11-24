@@ -33,25 +33,28 @@
 			{% endif %}
 		</div>
 		<div>
-			{%for event in events %}
+			{% for event in vist.event.all %}
+			{% if event.zan == False%}
 				{{ event.eventdate }}<br>
 				{{ event.eventtime }}<br>
+				{{ event.id }}<br>
 				{% if a <  event.eventdate  %}
-					<a href="{% url 'news:zapisv' pk=vist.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
+					<a href="{% url 'news:zapisv' pk1=vist.id pk2=event.id %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
 					{% if b == event.eventdate %}
 						Нельзя отписаться<br>
 					{% else %}
-						<a href="{% url 'news:otpis' pk=vist.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+						<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
 					{% endif %}
-						<a href="{% url 'news:zapisg' pk=vist.pk %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/
+						<a href="{% url 'news:zapisgv' pk1=vist.id pk2=event.id %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/
 					{% if b == event.eventdate %}
 						Нельзя отписаться<br>
 					{% else %}
-						<a href="{% url 'news:otpisg' pk=vist.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a><br><br>
+						<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="link">ОТПИСАТЬ ГРУППУ</a><br><br>
 					{% endif %}
 				{% else %}
 					Мероприятие прошло<br>
 				{% endif %}
+			{% endif %}
 			{% endfor %}
 			{% if post.image %}
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>

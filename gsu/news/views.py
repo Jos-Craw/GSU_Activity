@@ -31,11 +31,12 @@ def index(request):
 @login_required
 def profile(request):
     posts = Post.objects.filter(zapisi=request.user.id)
-    vists = Vist.objects.filter(zapisi=request.user.id)
+    vists = Vist.objects.filter(event__zapisi=request.user.id)
+    events = Event.objects.filter(zapisi=request.user.id)
     your_posts = Post.objects.filter(author=request.user.pk)
     a = date.today()
     b = a + timedelta(days=1)
-    return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b})
+    return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b,'events':events})
 
 @login_required
 def create(request):
@@ -454,20 +455,91 @@ def otpisg(request, pk):
 	return render(request, 'news/otpis.html', {'form': form,'messageSent': messageSent,})
 
 
-def zapisv(request, pk):
-	vist = get_object_or_404(Vist, pk=pk)
+def zapisv(request, pk1,pk2):
+	vist = get_object_or_404(Vist, pk=pk1)
+	event = get_object_or_404(Event, pk=pk2)
 	messageSent = False
 	if request.method == 'POST':
 		form = Subscribe(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'vist': vist.pk}
-			subject = vist.name + ' ЗАПИСЬ ' 
+			initial = {'event': event.pk}
+			subject = vist.name +' '+str(event.eventdate)+' '+str(event.eventtime) + ' ЗАПИСЬ ' 
 			message = 'ЛИЧНАЯ ЗАПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #LVDUBROVSKAYA@gsu.by
 			messageSent = True
-			vist.zapisi.add(request.user.id)
+			event.zan = True
+			event.zapisi.add(request.user.id)
+			event.save()
 			vist.save()
 	else:
 		form = Subscribe()
-	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,'vist':vist})
+	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,'vist':vist,'event':event})
+
+
+def zapisgv(request, pk1, pk2):
+	vist = get_object_or_404(Vist, pk=pk1)
+	event = get_object_or_404(Event, pk=pk2)
+	messageSent = False
+	if request.method == 'POST':
+		form = Subscribeg(request.POST)
+		if form.is_valid(): 
+			cd = form.cleaned_data
+			initial = {'vist': vist.pk}
+			initial = {'event': event.pk}
+			subject = vist.name +' '+str(event.eventdate)+' '+str(event.eventtime) + ' ЗАПИСЬ ' 
+			message = 'ГРУППОВАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #LVDUBROVSKAYA@gsu.by
+			messageSent = True
+			event.zan = True
+			event.zapisi.add(request.user.id)
+			event.save()
+			vist.save()
+	else:
+		form = Subscribeg()
+	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,'vist':vist,'event':event})
+
+def otpisv(request, pk1,pk2):
+	vist = get_object_or_404(Vist, pk=pk1)
+	event = get_object_or_404(Event, pk=pk2)
+	messageSent = False
+	if request.method == 'POST':
+		form = Subscribe(request.POST)
+		if form.is_valid():
+			cd = form.cleaned_data
+			initial = {'vist': vist.pk}
+			initial = {'event': event.pk}
+			subject = vist.name +' '+str(event.eventdate)+' '+str(event.eventtime) + ' ОТПИСЬ ' 
+			message = 'ЛИЧНАЯ ОТПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num + ' ' + request.user.email+ ' ' +request.user.group
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #LVDUBROVSKAYA@gsu.by
+			messageSent = True
+			event.zan = False
+			event.zapisi.remove(request.user.id)
+			event.save()
+			vist.save()
+	else:
+		form = Subscribe()
+	return render(request, 'news/otpis.html', {'form': form,'messageSent': messageSent,'vist':vist,'event':event})
+
+def otpisgv(request, pk1,pk2):
+	vist = get_object_or_404(Vist, pk=pk1)
+	event = get_object_or_404(Event, pk=pk2)
+	messageSent = False
+	if request.method == 'POST':
+		form = Subscribeg(request.POST)
+		if form.is_valid():
+			cd = form.cleaned_data
+			initial = {'vist': vist.pk}
+			initial = {'event': event.pk}
+			subject = vist.name +' '+str(event.eventdate)+' '+str(event.eventtime) + ' ОТПИСЬ '  
+			message = 'ГРУППОВАЯ ОТПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
+			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #LVDUBROVSKAYA@gsu.by
+			messageSent = True
+			event.zan = False
+			event.zapisi.remove(request.user.id)
+			event.save()
+			vist.save()
+	else:
+		form = Subscribeg()
+	return render(request, 'news/otpis.html', {'form': form,'messageSent': messageSent,'vist':vist,'event':event})

@@ -25,8 +25,8 @@ class VistAdmin(admin.ModelAdmin):
 admin.site.register(Vist, VistAdmin)
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('eventtime','eventdate','zan')
-    search_fields = ('eventtime','eventdate','zan','zapisi')
+    list_display = ('id','eventtime','eventdate','zan')
+    search_fields = ('id','eventtime','eventdate','zan','zapisi')
     fields = ('eventtime','eventdate','zan','zapisi')
 
 admin.site.register(Event, EventAdmin)
