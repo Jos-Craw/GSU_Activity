@@ -35,10 +35,10 @@
 		<div>
 			{% for event in vist.event.all %}
 			{% if event.zan == False%}
-				{{ event.eventdate }}<br>
+				{% if a <  event.eventdate  %}
+								{{ event.eventdate }}<br>
 				{{ event.eventtime }}<br>
 				{{ event.id }}<br>
-				{% if a <  event.eventdate  %}
 					<a href="{% url 'news:zapisv' pk1=vist.id pk2=event.id %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
 					{% if b == event.eventdate %}
 						Нельзя отписаться<br>

@@ -41,28 +41,29 @@
 			{% endfor %}
 			{% endif %}
 		</div>
-			{% else %}
+			{% endif %}
 		Ваши записи:<br>
 	</div>
 	<div>
-		{% if posts or vists%}
-			{% for vist in vists %}
+		{% if posts or events%}
+			{% for event in events %}
 					<div class="post">		
 						<div class="post-content">
+							{{ event }}
 							{{ vist.name}}<br>{{ vist.content}}<br>
-							{% for event in events %}
 								{{ event.eventdate }}<br>
 								{{ event.eventtime }}<br>
 								{{ event.id }}<br>
-								<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-								<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="link">ОТПИСАТЬ ГРУППУ</a><br>
-							{% endfor %}
-							Цена: {{ vist.stoim }}<br>
+								{% if b >= event.eventdate %}
+									Нельзя отписаться<br>
+								{% else %}
+								zasa
+								{% endif %}
 							{% if vist.image %}
 								<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>
 							{% endif %}
 						</div>
-					</div>		
+					</div>
 			{% endfor %}
 			{% for post in posts %}
 				{% if a <  post.eventdate  %}
@@ -87,7 +88,6 @@
 			{% endfor %}
 		{% else %}
 			Записей нет
-		{% endif %}
 		{% endif %}
 	</div>
 </div>
