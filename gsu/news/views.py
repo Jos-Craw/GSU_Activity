@@ -470,4 +470,4 @@ def zapisv(request, pk):
 			vist.save()
 	else:
 		form = Subscribe()
-	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent})
+	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,'vist':vist})

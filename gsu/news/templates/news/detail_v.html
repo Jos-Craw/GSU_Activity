@@ -33,25 +33,26 @@
 			{% endif %}
 		</div>
 		<div>
-			{% for event in vist.event.all %}
+			{%for event in events %}
 				{{ event.eventdate }}<br>
 				{{ event.eventtime }}<br>
 				{% if a <  event.eventdate  %}
-				<a href="{% url 'news:zapisv' pk=vist.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
-				{% if b == event.eventdate %}
-				Нельзя отписаться<br>
-				{% else %}
-				<a href="{% url 'news:otpis' pk=vist.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-				{% endif %}
-				<a href="{% url 'news:zapisg' pk=vist.pk %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/
-				{% if b == event.eventdate %}
-				Нельзя отписаться<br>
-				{% else %}
-				<a href="{% url 'news:otpisg' pk=vist.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a><br><br>
-				{% endif %}
+					<a href="{% url 'news:zapisv' pk=vist.pk %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
+					{% if b == event.eventdate %}
+						Нельзя отписаться<br>
+					{% else %}
+						<a href="{% url 'news:otpis' pk=vist.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+					{% endif %}
+						<a href="{% url 'news:zapisg' pk=vist.pk %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/
+					{% if b == event.eventdate %}
+						Нельзя отписаться<br>
+					{% else %}
+						<a href="{% url 'news:otpisg' pk=vist.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a><br><br>
+					{% endif %}
 				{% else %}
 					Мероприятие прошло<br>
 				{% endif %}
+			{% endfor %}
 			{% if post.image %}
 				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
 			{% endif %}
@@ -64,9 +65,6 @@
 			{% if post.file %}
 				<a href='{{ post.file.url }}' target="-blank" class="file">{{post.filename}}</a><br>
 			{% endif %}
-			{% if user.is_authenticated %}
-			{% endif %}
-			{% endfor %}
 		</div>
 	</div>
 	{% if messageSent %}
