@@ -44,12 +44,14 @@
 			{% endif %}
 		Ваши записи:<br>
 	</div>
-	<div>
+	<div>		
 		{% if posts or events%}
 			{% for event in events %}
+				{% if a <  event.eventdate  %}
+				{% for vist in vists %}
+					{% if event in vist.event.all %}
 					<div class="post">		
 						<div class="post-content">
-							{{ event }}
 							{{ vist.name}}<br>{{ vist.content}}<br>
 								{{ event.eventdate }}<br>
 								{{ event.eventtime }}<br>
@@ -62,8 +64,12 @@
 							{% if vist.image %}
 								<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>
 							{% endif %}
+							{% else %}
 						</div>
 					</div>
+				{% endif %}
+				{% endfor %}
+				{% endif %}
 			{% endfor %}
 			{% for post in posts %}
 				{% if a <  post.eventdate  %}

@@ -31,7 +31,7 @@ def index(request):
 @login_required
 def profile(request):
     posts = Post.objects.filter(zapisi=request.user.id)
-    vists = Vist.objects.filter(event__zapisi=request.user.id)
+    vists = Vist.objects.all()
     events = Event.objects.filter(zapisi=request.user.id)
     your_posts = Post.objects.filter(author=request.user.pk)
     a = date.today()

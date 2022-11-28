@@ -22,11 +22,11 @@ class AdvUser(AbstractUser):
         )
         
 
-    is_activated = models.BooleanField(default=True, db_index=True,verbose_name='Прошел активацию?')
-    avatar = models.ImageField(null=True, blank=True, upload_to="image/profile/")
-    phone_num = models.CharField(unique = True, null = True, blank = False, max_length=13)
-    faculty = models.CharField(null = True, blank =False,choices=fac,max_length=50)
-    group = models.CharField(null = True, blank = False,max_length=10)
+    is_activated = models.BooleanField(default=True, db_index=True,verbose_name='Прошел активацию')
+    avatar = models.ImageField(null=True, blank=True, upload_to="image/profile/",verbose_name='Аватарка')
+    phone_num = models.CharField(unique = True, null = True, blank = False, max_length=13,verbose_name='Номер телефона')
+    faculty = models.CharField(null = True, blank =False,choices=fac,max_length=50,verbose_name='Факультет')
+    group = models.CharField(null = True, blank = False,max_length=10,verbose_name='Группа')
 
 
 
@@ -43,9 +43,9 @@ class Consult(models.Model):
          ('14:00','14:00'),
          ('15:00','15:00'),
         )
-    eventdate = models.DateField(db_index=True,null=True,blank=False)
-    eventtime = models.CharField(choices=date,blank=False,max_length=10)
-    zan = models.BooleanField(default=False, db_index=True,verbose_name='Занято?')
+    eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
+    eventtime = models.CharField(choices=date,blank=False,max_length=10,verbose_name='Время')
+    zan = models.BooleanField(default=False, db_index=True,verbose_name='Занятость')
 
     class Meta:
         verbose_name_plural = 'Консультации'
@@ -61,20 +61,20 @@ class Post(models.Model):
         ('trud','Трудовая и волонтерская деятельность'),
         )
 
-    name = models.CharField(null=True, blank=False,max_length=100)
-    content = models.TextField(null=True, blank=False)
-    image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, null=True)
-    file = models.FileField(upload_to='files/%Y/%m/%d/', blank=True, null=True)
-    video = models.FileField(upload_to='video/%Y/%m/%d/', blank=True, null=True)
-    audio = models.FileField(upload_to='audio/%Y/%m/%d/', blank=True, null=True)
-    author = models.ForeignKey(AdvUser, on_delete=models.CASCADE, null=True)
-    pubdate = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Publication date')
-    eventtime = models.TimeField(db_index=True,null=True,blank=False)
-    eventdate = models.DateField(db_index=True,null=True,blank=False)
-    stoim = models.CharField(null = True, blank = False, max_length=10)
-    mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)]) 
-    tags = models.CharField( blank = False,choices=tag, max_length=50)
-    zapisi = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True)
+    name = models.CharField(null=True, blank=False,max_length=100,verbose_name='Заголовок')
+    content = models.TextField(null=True, blank=False,verbose_name='Контент')
+    image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, null=True,verbose_name='Изображение')
+    file = models.FileField(upload_to='files/%Y/%m/%d/', blank=True, null=True,verbose_name='Приклепленные файлы')
+    video = models.FileField(upload_to='video/%Y/%m/%d/', blank=True, null=True,verbose_name='Видео')
+    audio = models.FileField(upload_to='audio/%Y/%m/%d/', blank=True, null=True,verbose_name='Аудио')
+    author = models.ForeignKey(AdvUser, on_delete=models.CASCADE, null=True,verbose_name='Автор')
+    pubdate = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата публикации')
+    eventtime = models.TimeField(db_index=True,null=True,blank=False,verbose_name='Время')
+    eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
+    stoim = models.CharField(null = True, blank = False, max_length=10,verbose_name='Стоимость')
+    mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)],verbose_name='Количество мест') 
+    tags = models.CharField( blank = False,choices=tag, max_length=50,verbose_name='Тэг')
+    zapisi = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True,verbose_name='Записаные')
 
     class Meta:
         verbose_name_plural = 'События'
@@ -85,22 +85,27 @@ class Post(models.Model):
         return os.path.basename(self.file.name)
 
 class Event(models.Model):
-    eventtime = models.TimeField(db_index=True,null=True,blank=False)
-    eventdate = models.DateField(db_index=True,null=True,blank=False)
+    eventtime = models.TimeField(db_index=True,null=True,blank=False,verbose_name='Время')
+    eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
     zan = models.BooleanField(default=False, db_index=True,verbose_name='Занято')
-    zapisi = models.ManyToManyField(AdvUser, related_name='Записи',blank=True)
+    zapisi = models.ManyToManyField(AdvUser, related_name='Записи',blank=True,verbose_name='Записаные')
+
+    class Meta:
+        verbose_name_plural = 'Время и дата выставки'
+        verbose_name = 'Время и дата выставки'
+
 
 class Vist(models.Model):
-    name = models.CharField(null=True, blank=False,max_length=100)
-    content = models.TextField(null=True, blank=False)
-    image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, null=True)
-    file = models.FileField(upload_to='files/%Y/%m/%d/', blank=True, null=True)
-    video = models.FileField(upload_to='video/%Y/%m/%d/', blank=True, null=True)
-    audio = models.FileField(upload_to='audio/%Y/%m/%d/', blank=True, null=True)
-    author = models.ForeignKey(AdvUser, on_delete=models.CASCADE, null=True)
-    pubdate = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Publication date')
-    stoim = models.CharField(null = True, blank = False, max_length=10)
-    event = models.ManyToManyField(Event,related_name='Даты',blank=True)
+    name = models.CharField(null=True, blank=False,max_length=100,verbose_name='Название')
+    content = models.TextField(null=True, blank=False,verbose_name='Контент')
+    image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, null=True,verbose_name='Изображение')
+    file = models.FileField(upload_to='files/%Y/%m/%d/', blank=True, null=True,verbose_name='Приклепленные файлы')
+    video = models.FileField(upload_to='video/%Y/%m/%d/', blank=True, null=True,verbose_name='Видео')
+    audio = models.FileField(upload_to='audio/%Y/%m/%d/', blank=True, null=True,verbose_name='Аудио')
+    author = models.ForeignKey(AdvUser, on_delete=models.CASCADE, null=True,verbose_name='Автор')
+    pubdate = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата публикации')
+    stoim = models.CharField(null = True, blank = False, max_length=10,verbose_name='Стоимость')
+    event = models.ManyToManyField(Event,related_name='Даты',blank=True,verbose_name='Время и дата')
 
     class Meta:
         verbose_name_plural = 'Выставки'
@@ -108,12 +113,12 @@ class Vist(models.Model):
         ordering = ['pubdate']
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True ,null=True)
-    vist = models.ForeignKey(Vist, on_delete=models.CASCADE, blank=True , null=True)
-    content = models.TextField(null=True, blank=False)
-    author = models.CharField(max_length=30)
-    pubdate = models.DateTimeField(auto_now_add=True, db_index=True)
-    moderation = models.BooleanField(default=False)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True ,null=True,verbose_name='Мероприятие')
+    vist = models.ForeignKey(Vist, on_delete=models.CASCADE, blank=True , null=True,verbose_name='Выставка')
+    content = models.TextField(null=True, blank=False,verbose_name='Контент')
+    author = models.CharField(max_length=30,verbose_name='Автор')
+    pubdate = models.DateTimeField(auto_now_add=True, db_index=True,verbose_name='Дата публикации')
+    moderation = models.BooleanField(default=False,verbose_name='Модерация')
 
     class Meta:
         verbose_name_plural = 'Отзывы'
@@ -122,7 +127,7 @@ class Comment(models.Model):
 
 
 class Section(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30,verbose_name='Название')
     otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
 
     class Meta:
@@ -130,7 +135,7 @@ class Section(models.Model):
         verbose_name = 'Секция'
 
 class Tvor(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30,verbose_name='Название')
     otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
 
     class Meta:
@@ -138,7 +143,7 @@ class Tvor(models.Model):
         verbose_name = 'Творческое направление'
 
 class Trud(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30,verbose_name='Название')
     otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
 
     class Meta:
@@ -146,7 +151,7 @@ class Trud(models.Model):
         verbose_name = 'Трудовое направление'
 
 class Volant(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30,verbose_name='Название')
     otobr = models.BooleanField(default=False, db_index=True,verbose_name='Отображение')
 
     class Meta:
