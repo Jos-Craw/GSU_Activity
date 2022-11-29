@@ -14,11 +14,11 @@ header{
 .logo{
   display: flex;
   align-items: center;
-  font-size: 50px;
+  font-size: 80px;
 }
 .nav{
 	display: flex;
-  	align-items: center;
+  align-items: center;
 }
 .log{
   display: flex;
@@ -27,13 +27,40 @@ header{
 section{
   display: flex;
   flex-direction: column;
-  width: 50%;
+  align-items: center;
+  flex-wrap:wrap;
 }
 .post{
+  margin-top: 10px;
+  font-size: 40px;
   margin-bottom: 5px;
   border-radius: 20px;
-  backdrop-filter: blur(10px);
-  background: rgba(150, 150, 150, 0.15);
+  width:70%;
+  box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.15);
+  margin-bottom: 5px;
+}
+form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+button{
+  width: 50%;
+  font-size: 30px;
+}
+form select{
+  font-size: 25px;
+}
+.calendar{
+  flex-direction: column;
+  display: flex;
+  margin-top: 10px;
+  font-size: 40px;
+  margin-bottom: 5px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.15);
+  align-items: center;
+  width: 70%;
 }
 .media{
   width: 30%;
@@ -44,6 +71,7 @@ section{
   border-radius: 50%;
 }
 .post-author{
+  font-size: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -52,22 +80,39 @@ section{
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px;
+  padding: 0 0 10px 10px;
 }
 .post-author-b{
-  padding: 10px;
+  padding: 0 0 10px 10px;
 }
 .post-content{
   padding: 0 0 10px 10px;
 }
 .link{
-	margin: 8px;
+	margin: 10px;
 	text-decoration: none;
 	color: #fffcff;
 }
 .link:hover{
 	color: black;
-	background-color: #F2F7F2;
+	background: #F2F7F2;
+}
+.logo_link{
+  color: #fffcff;
+  margin: 10px;
+  text-decoration: none;
+}
+.logo_link:hover{
+  color: black;
+  background: yellow;
+}
+.post_link{
+  color: black;
+  text-decoration: none;
+}
+.post_link:hover{
+  color: black;
+  background: yellow;
 }
 .file{
   text-decoration: none;
@@ -75,11 +120,24 @@ section{
 }
 /*600.768.992.1200*/
 
+.profile{
+  margin-top: 10px;
+  font-size: 40px;
+  margin-bottom: 5px;
+  border-radius: 20px;
+  width:70%;
+  box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.15);
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-wrap:wrap;
+}
 
 .dropdown {
   position: relative;
 }
-
 .dropdown-content {
   display: none;
   position: absolute;
@@ -87,18 +145,62 @@ section{
   min-width: 160px;
   z-index: 1;
 }
-
 .dropdown-content a {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
-
 .dropdown-content a:hover {
 	color: black;
 	background-color: #F2F7F2;
 }
-
 .dropdown:hover .dropdown-content {
 	display: block;
+}
+
+
+@media (max-width: 1050px){
+  header{
+  display: flex;
+  justify-content: space-around;
+  background: #2961BC;
+  flex-direction: column;
+  align-items: center;
+  margin: -8px;
+} 
+  .logo{
+  display: flex;
+  align-items: center;
+  font-size: 50px;
+  order: 1;
+  width: 100%;
+  justify-content: center;
+}
+  .nav{
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 40px;
+  order: 3;
+  width: 100%;
+  justify-content: space-between;
+}
+  .log{
+  display: flex;
+  align-items: center;
+  font-size: 40px;
+  order: 2;
+  width: 100%;
+  justify-content: center;
+}
+  .post{
+    width: 95%;
+    font-size:30px;
+  }
+  .calendar{
+    width: 95%;
+  }
+  .profile{
+    width: 95%;
+  }
 }

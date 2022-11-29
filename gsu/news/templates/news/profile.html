@@ -4,24 +4,25 @@
 
 {% block content %}
 <div class="profile">
-	{{user.username }}
-	{% if user.avatar %}
-      <img class="avatar" src="{{ user.avatar.url }}"><br><br>
-    {% else %}
-      <img class="avatar" src="\static\news\user.png"><br><br>
-    {% endif %}
-	{{user.first_name}} {{user.last_name}}<br>
-	{{user.phone_num}}<br>
-	{% if user.faculty %}
-	{{user.get_faculty_display}}<br>
-	{% endif %}
-	{% if user.group %}
-	{{user.group}}
-	{% endif %}
 	<div>
-		<a href="{% url 'news:profile_change' %}"  class="link">Редактировать информацию профиля</a><br>
-		<a href="{% url 'news:password_change' %}"  class="link">Изменить пароль</a><br>
-		<a href="{% url 'news:profile_delete' %}"  class="link">Удалить аккаунт</a><br>
+		{{user.username }}<br>
+		{% if user.avatar %}
+	      <img class="avatar" src="{{ user.avatar.url }}"><br>
+	    {% else %}
+	      <img class="avatar" src="\static\news\user.png"><br>
+	    {% endif %}
+		<div>{{user.first_name}} {{user.last_name}}</div>
+		{{user.phone_num}}<br>
+		{% if user.faculty %}
+		<div>{{user.get_faculty_display}}</div>
+		{% endif %}
+		{% if user.group %}
+		<div>{{user.group}}</div>
+		{% endif %}
+		<a href="{% url 'news:profile_change' %}"  class="post_link">Редактировать информацию профиля</a>
+		<a href="{% url 'news:password_change' %}"  class="post_link">Изменить пароль</a>
+		<a href="{% url 'news:profile_delete' %}"  class="post_link">Удалить аккаунт</a>
+	</div>
 		{% if user.is_superuser == 1 %}
 		Созданые события:<br>
 		<div>
@@ -42,9 +43,7 @@
 			{% endif %}
 		</div>
 			{% endif %}
-		Ваши записи:<br>
-	</div>
-	<div>		
+		Ваши записи:<br>		
 		{% if posts or events%}
 			{% for event in events %}
 				{% if a <  event.eventdate  %}
@@ -75,18 +74,18 @@
 				{% if a <  post.eventdate  %}
 					<div class="post">		
 						<div class="post-content">
-							Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
-							{{ post.name}}<br>{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+							Дата публикации:<br>{{ post.pubdate|date:"d M Y H:i" }}<br>
+							{{ post.name}}<br>{{ post.content}}<br>{{ post.eventtime }} {{ post.eventdate }}<br>
 							Количество свободных мест: {{ post.mesta }}<br>
 							Цена: {{ post.stoim }}<br>
+							{% if post.image %}
+								<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a><br>
+							{% endif %}
 							{% if b == post.eventdate %}
-								Нельзя отписаться
+								Нельзя отписаться<br>
 							{% else %}
 								<a href="{% url 'news:otpis' pk=post.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-								<a href="{% url 'news:otpisg' pk=post.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a>
-							{% endif %}
-							{% if post.image %}
-								<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
+								<a href="{% url 'news:otpisg' pk=post.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a><br>
 							{% endif %}
 						</div>
 					</div>
@@ -95,6 +94,5 @@
 		{% else %}
 			Записей нет
 		{% endif %}
-	</div>
 </div>
 {% endblock %}
