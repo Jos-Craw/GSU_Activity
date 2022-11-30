@@ -13,7 +13,7 @@
 		{% csrf_token %}
 		{% bootstrap_form form layout='horizontal' %}
 		<input type="hidden" name="next" value="{% url 'news:index' %}">
-		{% buttons submit='Log in' %}{% endbuttons %}
+		<button type="submit">Log In</button>
 	</form>
 	{% endif %}
 </div>

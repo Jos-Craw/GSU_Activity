@@ -19,13 +19,12 @@
 		{% if user.group %}
 		<div>{{user.group}}</div>
 		{% endif %}
-		<a href="{% url 'news:profile_change' %}"  class="post_link">Редактировать информацию профиля</a>
-		<a href="{% url 'news:password_change' %}"  class="post_link">Изменить пароль</a>
-		<a href="{% url 'news:profile_delete' %}"  class="post_link">Удалить аккаунт</a>
+		<a href="{% url 'news:profile_change' %}"  class="post_link">Редактировать информацию профиля</a><br>
+		<a href="{% url 'news:password_change' %}"  class="post_link">Изменить пароль</a><br>
+		<a href="{% url 'news:profile_delete' %}"  class="post_link">Удалить аккаунт</a><br>
 	</div>
 		{% if user.is_superuser == 1 %}
 		Созданые события:<br>
-		<div>
 			{% if your_posts %}
 			{% for post in your_posts %}
 				<div class="post">		
@@ -41,7 +40,6 @@
 					</div>
 			{% endfor %}
 			{% endif %}
-		</div>
 			{% endif %}
 		Ваши записи:<br>		
 		{% if posts or events%}
@@ -58,12 +56,12 @@
 								{% if b >= event.eventdate %}
 									Нельзя отписаться<br>
 								{% else %}
-								ada
+									<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+									<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
 								{% endif %}
 							{% if vist.image %}
 								<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>
 							{% endif %}
-							{% else %}
 						</div>
 					</div>
 				{% endif %}
@@ -84,8 +82,8 @@
 							{% if b == post.eventdate %}
 								Нельзя отписаться<br>
 							{% else %}
-								<a href="{% url 'news:otpis' pk=post.pk %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-								<a href="{% url 'news:otpisg' pk=post.pk %}" class="link">ОТПИСАТЬ ГРУППУ</a><br>
+								<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+								<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
 							{% endif %}
 						</div>
 					</div>

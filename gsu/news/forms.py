@@ -67,7 +67,7 @@ class Subscribe(forms.Form):
 
 class Subscribeg(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
-    colvo = forms.IntegerField(min_value=1, max_value=30)
+    colvo = forms.IntegerField(min_value=1, max_value=20)
     
 
 class NewConsult(ModelForm):

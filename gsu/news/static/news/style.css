@@ -44,12 +44,15 @@ form{
   flex-direction: column;
   align-items: center;
 }
-button{
-  width: 50%;
+.calendar button{
+  width: 40%;
   font-size: 30px;
 }
 form select{
-  font-size: 25px;
+  font-size: 30px;
+}
+input {
+  font-size: 30px;
 }
 .calendar{
   flex-direction: column;
@@ -119,7 +122,9 @@ form select{
   color: #fffcff;
 }
 /*600.768.992.1200*/
-
+.delete{
+  width: 120%;
+}
 .profile{
   margin-top: 10px;
   font-size: 40px;
@@ -128,11 +133,56 @@ form select{
   width:70%;
   box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.15);
   margin-bottom: 5px;
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   flex-wrap:wrap;
+}
+.profile button{
+  width: 40%;
+  font-size: 30px;
+}
+.delete {
+  margin-top: 10px;
+  font-size: 40px;
+  margin-bottom: 5px;
+  border-radius: 20px;
+  width:70%;
+  box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.15);
+  margin-bottom: 5px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-wrap:wrap;
+
+}
+.delete button{
+  width: 120%;
+  font-size: 30px;
+}
+.login {
+  margin-top: 10px;
+  font-size: 40px;
+  margin-bottom: 5px;
+  border-radius: 20px;
+  width:70%;
+  box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.15);
+  margin-bottom: 5px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-wrap:wrap;
+
+}
+.login button{
+  width: 120%;
+  font-size: 30px;
 }
 
 .dropdown {

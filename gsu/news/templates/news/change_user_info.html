@@ -5,11 +5,11 @@
 {% block title %}Edit profile{% endblock %}
 
 {% block content %}
-<div class="good">
+<div class="profile">
 	Your info
 	<form method="post" enctype="multipart/form-data">
 	{% csrf_token %}
-	{{ form.as_p }}
+	{{ form }}
 	<button type="submit">Edit</button>
 	</form>
 </div>

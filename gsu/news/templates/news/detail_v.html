@@ -27,7 +27,7 @@
 				<a href='{{ vist.file.url }}' target="-blank" class="file">{{vist.filename}}</a><br>
 			{% endif %}
 			{% if user.is_superuser == 1 %}
-				<a href="{% url 'news:delete_post' pk=vist.pk %}"  class="link">Delete</a>
+				<a href="{% url 'news:delete_post' pk=vist.pk %}"  class="post_link">Delete</a>
 			{% endif %}
 			{% if user.is_authenticated %}
 			{% endif %}
@@ -39,17 +39,17 @@
 								{{ event.eventdate }}<br>
 				{{ event.eventtime }}<br>
 				{{ event.id }}<br>
-					<a href="{% url 'news:zapisv' pk1=vist.id pk2=event.id %}" class="link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
+					<a href="{% url 'news:zapisv' pk1=vist.id pk2=event.id %}" class="post_link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
 					{% if b == event.eventdate %}
 						Нельзя отписаться<br>
 					{% else %}
-						<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+						<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
 					{% endif %}
-						<a href="{% url 'news:zapisgv' pk1=vist.id pk2=event.id %}" class="link">ГРУППОВАЯ ЗАПИСЬ</a>/
+						<a href="{% url 'news:zapisgv' pk1=vist.id pk2=event.id %}" class="post_link">ГРУППОВАЯ ЗАПИСЬ</a>/
 					{% if b == event.eventdate %}
 						Нельзя отписаться<br>
 					{% else %}
-						<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="link">ОТПИСАТЬ ГРУППУ</a><br><br>
+						<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br><br>
 					{% endif %}
 				{% else %}
 					Мероприятие прошло<br>
