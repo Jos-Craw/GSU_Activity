@@ -27,8 +27,9 @@
 		Созданые события:<br>
 			{% if your_posts %}
 			{% for post in your_posts %}
-				<div class="post">		
-						<div class="post-content">
+				{% if a <  post.eventdate  %}
+				<div class="post">
+				<div class="post-content">
 							Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
 							{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
 							Количество свободных мест: {{ post.mesta }}<br>
@@ -37,7 +38,12 @@
 								<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
 							{% endif %}
 						</div>
+						<div class="post-author-b">
+					<a href="{% url 'news:detail' pk=post.pk %}" class="post_link">Детали</a>
+				</div>		
+						
 					</div>
+					{% endif %}
 			{% endfor %}
 			{% endif %}
 			{% endif %}
@@ -52,12 +58,14 @@
 							{{ vist.name}}<br>{{ vist.content}}<br>
 								{{ event.eventdate }}<br>
 								{{ event.eventtime }}<br>
-								{{ event.id }}<br>
 								{% if b >= event.eventdate %}
 									Нельзя отписаться<br>
 								{% else %}
-									<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-									<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+									{% if event.group == False %}
+										<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+									{% else %}
+										<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+									{% endif %}
 								{% endif %}
 							{% if vist.image %}
 								<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>

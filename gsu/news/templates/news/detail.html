@@ -18,7 +18,10 @@
 				{% if post.mesta == 0 %}
 				Нет мест<br>
 				{% else %}
-				<a href="{% url 'news:zapis' pk=post.pk %}" class="post_link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
+				{% if post in your_zapisi %}
+				{% else %}
+					<a href="{% url 'news:zapis' pk=post.pk %}" class="post_link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
+				{% endif %}
 				{% if b == post.eventdate %}
 				Нельзя отписаться<br>
 				{% elif post not in your_zapisi %}
@@ -26,7 +29,10 @@
 				{% else %}
 				<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
 				{% endif %}
-				<a href="{% url 'news:zapisg' pk=post.pk %}" class="post_link">ГРУППОВАЯ ЗАПИСЬ</a>/
+				{% if post in your_zapisi %}
+				{% else %}
+					<a href="{% url 'news:zapisg' pk=post.pk %}" class="post_link">ГРУППОВАЯ ЗАПИСЬ</a>/
+				{% endif %}
 				{% if b == post.eventdate %}
 				Нельзя отписаться<br>
 				{% elif post not in your_zapisi %}
@@ -54,7 +60,7 @@
 				<a href='{{ post.file.url }}' target="-blank" class="file">{{post.filename}}</a><br>
 			{% endif %}
 			{% if user.is_superuser == 1 %}
-				<a href="{% url 'news:delete_post' pk=post.pk %}"  class="link">Delete</a>
+				<a href="{% url 'news:delete_post' pk=post.pk %}"  class="post_link">Delete</a>
 			{% endif %}
 		</div>
 	{% if messageSent %}

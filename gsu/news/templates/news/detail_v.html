@@ -38,16 +38,19 @@
 				{% if a <  event.eventdate  %}
 								{{ event.eventdate }}<br>
 				{{ event.eventtime }}<br>
-				{{ event.id }}<br>
 					<a href="{% url 'news:zapisv' pk1=vist.id pk2=event.id %}" class="post_link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
 					{% if b == event.eventdate %}
 						Нельзя отписаться<br>
+					{% elif vist not in your_vist %}
+						<br>
 					{% else %}
 						<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
 					{% endif %}
 						<a href="{% url 'news:zapisgv' pk1=vist.id pk2=event.id %}" class="post_link">ГРУППОВАЯ ЗАПИСЬ</a>/
 					{% if b == event.eventdate %}
 						Нельзя отписаться<br>
+					{% elif vist not in your_vist %}
+						<br>
 					{% else %}
 						<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br><br>
 					{% endif %}

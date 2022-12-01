@@ -112,6 +112,7 @@ def detail(request, pk):
 @login_required
 def detail_v(request, pk):
 	messageSent = False
+	your_vist = Event.objects.filter(zapisi=request.user.id)
 	vist = get_object_or_404(Vist, pk=pk)
 	comments = Comment.objects.filter(vist=pk,moderation=True)
 	initial = {'vist': vist.pk}
@@ -133,7 +134,7 @@ def detail_v(request, pk):
 			message = 'Зайдите на сайт для одобрения комментария: '+cd['content'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #hodanovich@gsu.by, osnach@gsu.by
 			messageSent = True
-	return render(request, 'news/detail_v.html', {'vist': vist, 'comments': comments, 'form': form,'messageSent': messageSent,'a':a,'b':b})
+	return render(request, 'news/detail_v.html', {'vist': vist, 'comments': comments, 'form': form,'messageSent': messageSent,'a':a,'b':b,'your_vist':your_vist})
 
 
 
@@ -393,7 +394,10 @@ def zapisg(request, pk):
 			message = 'ГРУППОВАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
-			post.zapisi.add(request.user.id)
+			for i in range(1,cd['colvo']+1):
+				post.zapisi.add(request.user.id)
+				post.save()
+				print(i)
 			post.mesta = post.mesta - cd['colvo']
 			post.save()
 	else:
@@ -471,6 +475,7 @@ def zapisv(request, pk1,pk2):
 			messageSent = True
 			event.zan = True
 			event.zapisi.add(request.user.id)
+			event.group = False
 			event.save()
 			vist.save()
 	else:
@@ -494,6 +499,7 @@ def zapisgv(request, pk1, pk2):
 			messageSent = True
 			event.zan = True
 			event.zapisi.add(request.user.id)
+			event.group = True
 			event.save()
 			vist.save()
 	else:
@@ -515,6 +521,7 @@ def otpisv(request, pk1,pk2):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #LVDUBROVSKAYA@gsu.by
 			messageSent = True
 			event.zan = False
+			event.group = False
 			event.zapisi.remove(request.user.id)
 			event.save()
 			vist.save()
@@ -537,6 +544,7 @@ def otpisgv(request, pk1,pk2):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #LVDUBROVSKAYA@gsu.by
 			messageSent = True
 			event.zan = False
+			event.group = False
 			event.zapisi.remove(request.user.id)
 			event.save()
 			vist.save()

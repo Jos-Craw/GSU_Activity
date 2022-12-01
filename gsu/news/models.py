@@ -89,6 +89,7 @@ class Event(models.Model):
     eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
     zan = models.BooleanField(default=False, db_index=True,verbose_name='Занято')
     zapisi = models.ManyToManyField(AdvUser, related_name='Записи',blank=True,verbose_name='Записаные')
+    group = models.BooleanField(default=False, db_index=True,verbose_name='Групповая')
 
     class Meta:
         verbose_name_plural = 'Время и дата выставки'

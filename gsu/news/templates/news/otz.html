@@ -3,7 +3,7 @@
 {% block content %}
 	{% if comments %}
 			{% for comment in comments %}
-			<div class="comment">
+			<div class="profile">
 				{% if comment.post.name %}
 				{{ comment.post.name}}<br>
 				{{ comment.post.eventtime }} {{ comment.post.eventdate }}<br>

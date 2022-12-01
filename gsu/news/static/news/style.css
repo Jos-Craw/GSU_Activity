@@ -181,8 +181,7 @@ input {
 
 }
 .login button{
-  width: 120%;
-  font-size: 30px;
+  font-size: 100%;
 }
 
 .dropdown {
