@@ -84,6 +84,7 @@ class Post(models.Model):
     def filename(self):
         return os.path.basename(self.file.name)
 
+
 class Event(models.Model):
     eventtime = models.TimeField(db_index=True,null=True,blank=False,verbose_name='Время')
     eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')

@@ -14,10 +14,10 @@
 		<div>{{user.first_name}} {{user.last_name}}</div>
 		{{user.phone_num}}<br>
 		{% if user.faculty %}
-		<div>{{user.get_faculty_display}}</div>
+			<div>{{user.get_faculty_display}}</div>
 		{% endif %}
 		{% if user.group %}
-		<div>{{user.group}}</div>
+			<div>{{user.group}}</div>
 		{% endif %}
 		<a href="{% url 'news:profile_change' %}"  class="post_link">Редактировать информацию профиля</a><br>
 		<a href="{% url 'news:password_change' %}"  class="post_link">Изменить пароль</a><br>
@@ -26,54 +26,53 @@
 		{% if user.is_superuser == 1 %}
 		Созданые события:<br>
 			{% if your_posts %}
-			{% for post in your_posts %}
-				{% if a <  post.eventdate  %}
-				<div class="post">
-				<div class="post-content">
-							Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
-							{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
-							Количество свободных мест: {{ post.mesta }}<br>
-							Цена: {{ post.stoim }}<br>
-							{% if post.image %}
-								<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
-							{% endif %}
+				{% for post in your_posts %}
+					{% if a <  post.eventdate  %}
+						<div class="post">
+							<div class="post-content">
+								Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
+								{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+								Количество свободных мест: {{ post.mesta }}<br>
+								Цена: {{ post.stoim }}<br>
+								{% if post.image %}
+									<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
+								{% endif %}
+							</div>
+							<div class="post-author-b">
+								<a href="{% url 'news:detail' pk=post.pk %}" class="post_link">Детали</a>
+							</div>		
 						</div>
-						<div class="post-author-b">
-					<a href="{% url 'news:detail' pk=post.pk %}" class="post_link">Детали</a>
-				</div>		
-						
-					</div>
 					{% endif %}
-			{% endfor %}
+				{% endfor %}
 			{% endif %}
-			{% endif %}
+		{% endif %}
 		Ваши записи:<br>		
 		{% if posts or events%}
 			{% for event in events %}
 				{% if a <  event.eventdate  %}
-				{% for vist in vists %}
-					{% if event in vist.event.all %}
-					<div class="post">		
-						<div class="post-content">
-							{{ vist.name}}<br>{{ vist.content}}<br>
-								{{ event.eventdate }}<br>
-								{{ event.eventtime }}<br>
-								{% if b >= event.eventdate %}
-									Нельзя отписаться<br>
-								{% else %}
-									{% if event.group == False %}
-										<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+					{% for vist in vists %}
+						{% if event in vist.event.all %}
+							<div class="post">		
+								<div class="post-content">
+									{{ vist.name}}<br>{{ vist.content}}<br>
+									{{ event.eventdate }}<br>
+									{{ event.eventtime }}<br>
+									{% if b >= event.eventdate %}
+										Нельзя отписаться<br>
 									{% else %}
-										<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+										{% if event.group == False %}
+											<a href="{% url 'news:otpisv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+										{% else %}
+											<a href="{% url 'news:otpisgv' pk1=vist.id pk2=event.id %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+										{% endif %}
 									{% endif %}
-								{% endif %}
-							{% if vist.image %}
-								<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>
-							{% endif %}
-						</div>
-					</div>
-				{% endif %}
-				{% endfor %}
+									{% if vist.image %}
+										<a href="{{ vist.image.url }}"><img src="{{ vist.image.url }}" class="media"></a>
+									{% endif %}
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
 				{% endif %}
 			{% endfor %}
 			{% for post in posts %}
@@ -95,7 +94,7 @@
 							{% endif %}
 						</div>
 					</div>
-			{% endif  %}		
+				{% endif  %}		
 			{% endfor %}
 		{% else %}
 			Записей нет
