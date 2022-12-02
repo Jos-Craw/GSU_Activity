@@ -53,6 +53,14 @@ class Consult(models.Model):
         ordering = ['eventdate']
 
 
+class Zapis(models.Model):
+    zap = models.ManyToManyField(AdvUser,blank=True,verbose_name='Записаные')
+    group = models.BooleanField(default=False, db_index=True,verbose_name='Групповая')
+
+    class Meta:
+        verbose_name_plural = 'Записи на события'
+        verbose_name = 'Запись на событие'
+
 class Post(models.Model):
     tag = (
         ('cult','Культурно-досуговая деятельность'),
@@ -74,7 +82,7 @@ class Post(models.Model):
     stoim = models.CharField(null = True, blank = False, max_length=10,verbose_name='Стоимость')
     mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)],verbose_name='Количество мест') 
     tags = models.CharField( blank = False,choices=tag, max_length=50,verbose_name='Тэг')
-    zapisi = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True,verbose_name='Записаные')
+    zapis = models.ManyToManyField(Zapis, related_name='Записаные',blank=True, verbose_name='Записаные')
 
     class Meta:
         verbose_name_plural = 'События'

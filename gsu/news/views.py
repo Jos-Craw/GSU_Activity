@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant, Vist, Event
+from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant, Vist, Event, Zapis
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -30,13 +30,14 @@ def index(request):
 
 @login_required
 def profile(request):
-    posts = Post.objects.filter(zapisi=request.user.id)
+    posts = Post.objects.all()
     vists = Vist.objects.all()
+    zapisis = Zapis.objects.filter(zap=request.user.id)
     events = Event.objects.filter(zapisi=request.user.id)
     your_posts = Post.objects.filter(author=request.user.pk)
     a = date.today()
     b = a + timedelta(days=1)
-    return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b,'events':events})
+    return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b,'events':events,'zapisis':zapisis})
 
 @login_required
 def create(request):

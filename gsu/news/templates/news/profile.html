@@ -77,23 +77,30 @@
 			{% endfor %}
 			{% for post in posts %}
 				{% if a <  post.eventdate  %}
-					<div class="post">		
-						<div class="post-content">
-							Дата публикации:<br>{{ post.pubdate|date:"d M Y H:i" }}<br>
-							{{ post.name}}<br>{{ post.content}}<br>{{ post.eventtime }} {{ post.eventdate }}<br>
-							Количество свободных мест: {{ post.mesta }}<br>
-							Цена: {{ post.stoim }}<br>
-							{% if post.image %}
-								<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a><br>
-							{% endif %}
-							{% if b == post.eventdate %}
-								Нельзя отписаться<br>
-							{% else %}
-								<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-								<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
-							{% endif %}
-						</div>
-					</div>
+					{% for zapisi in zapisis %}
+						{% if zapisi in post.zapis.all %}
+							<div class="post">		
+								<div class="post-content">
+									Дата публикации:<br>{{ post.pubdate|date:"d M Y H:i" }}<br>
+									{{ post.name}}<br>{{ post.content}}<br>{{ post.eventtime }} {{ post.eventdate }}<br>
+									Количество свободных мест: {{ post.mesta }}<br>
+									Цена: {{ post.stoim }}<br>
+									{% if post.image %}
+										<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a><br>
+									{% endif %}
+									{% if b == post.eventdate %}
+										Нельзя отписаться<br>
+									{% else %}
+										{% if zapisi.group == False %}
+											<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+										{% else %}
+											<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+										{% endif %}
+									{% endif %}
+								</div>
+							</div>
+						{% endif %}	
+					{% endfor %}
 				{% endif  %}		
 			{% endfor %}
 		{% else %}

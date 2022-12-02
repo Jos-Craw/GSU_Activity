@@ -1,15 +1,15 @@
 from django.contrib import admin
 import datetime
 
-from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant , Vist, Event
+from .models import AdvUser, Post, Comment, Consult, Section, Tvor, Trud,Volant , Vist, Event, Zapis
 
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id','name', 'content', 'author', 'pubdate','tags', 'image','stoim','mesta', 'file', 'video', 'audio','eventtime','eventdate')
     list_display_links = ('content','name',)
-    search_fields = ('name','content', 'author','tags','eventtime','eventdate','stoim','mesta', 'image', 'file', 'video', 'audio','zapisi')
+    search_fields = ('name','content', 'author','tags','eventtime','eventdate','stoim','mesta', 'image', 'file', 'video', 'audio','zapis')
     date_hierarchy = 'pubdate'
-    fields = ('name','author','tags', 'content','eventtime','eventdate', 'image','stoim','mesta', 'file', 'video', 'audio','zapisi')
+    fields = ('name','author','tags', 'content','eventtime','eventdate', 'image','stoim','mesta', 'file', 'video', 'audio','zapis')
 
 
 admin.site.register(Post, PostAdmin)
@@ -30,6 +30,13 @@ class EventAdmin(admin.ModelAdmin):
     fields = ('eventtime','eventdate','zan','zapisi','group')
 
 admin.site.register(Event, EventAdmin)
+
+class ZapisAdmin(admin.ModelAdmin):
+    list_display = ('id','group')
+    search_fields = ('id','zap','group')
+    fields = ('zap','group')
+
+admin.site.register(Zapis, ZapisAdmin)
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('content', 'author', 'pubdate', 'post','vist', 'moderation')
