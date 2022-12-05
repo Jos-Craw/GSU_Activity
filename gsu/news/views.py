@@ -85,7 +85,7 @@ def deletepost(request, pk):
 
 @login_required
 def detail(request, pk):
-	your_zapisi = Post.objects.filter(zapisi=request.user.id)
+	your_zapisi = Zapis.objects.filter(zap=request.user.id)
 	messageSent = False
 	post = get_object_or_404(Post, pk=pk)
 	comments = Comment.objects.filter(post=pk,moderation=True)
@@ -141,7 +141,7 @@ def detail_v(request, pk):
 
 def cult(request):
     posts = Post.objects.all()
-    your_zapisi = Post.objects.filter(zapisi=request.user.id)
+    your_zapisi = Zapis.objects.filter(zap=request.user.id)
     tvors = Tvor.objects.filter(otobr=True) 
     return render(request, 'news/cult.html', {'posts': posts,'your_zapisi':your_zapisi,'tvors':tvors})
 
@@ -166,21 +166,21 @@ def tvor(request,pk):
 def sport(request):
 	sections = Section.objects.filter(otobr=True)
 	posts = Post.objects.all()
-	your_zapisi = Post.objects.filter(zapisi=request.user.id) 
+	your_zapisi = Zapis.objects.filter(zap=request.user.id)
 	return render(request, 'news/sport.html', {'posts': posts,'your_zapisi':your_zapisi,'sections':sections})
 
 
 def mass(request):
 	posts = Post.objects.all()
 	vists = Vist.objects.all()
-	your_zapisi = Post.objects.filter(zapisi=request.user.id) 
+	your_zapisi = Zapis.objects.filter(zap=request.user.id) 
 	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'vists':vists})
 
 def trud(request):
     posts = Post.objects.all()
     truds = Trud.objects.filter(otobr=True)
     volonts = Volant.objects.filter(otobr=True)
-    your_zapisi = Post.objects.filter(zapisi=request.user.id) 
+    your_zapisi = Zapis.objects.filter(zap=request.user.id) 
     return render(request, 'news/trud.html', {'posts': posts,'your_zapisi':your_zapisi,'truds':truds,'volonts': volonts})
 
 def trud_naprav(request,pk):

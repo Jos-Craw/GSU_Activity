@@ -15,40 +15,34 @@
 			Количество свободных мест: {{ post.mesta }}<br>
 			Цена: {{ post.stoim }}<br>
 			{% if a <  post.eventdate  %}
-				{% if post.mesta == 0 %}
-				Нет мест<br>
-				{% else %}
-				{% if post in your_zapisi %}
-				{% else %}
-					<a href="{% url 'news:zapis' pk=post.pk %}" class="post_link">ЗАПИСАТЬСЯ ЛИЧНО</a>/
-				{% endif %}
-				{% if b == post.eventdate %}
-				Нельзя отписаться<br>
-				{% elif post not in your_zapisi %}
-				<br>
-				{% else %}
-				<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-				{% endif %}
-				{% if post in your_zapisi %}
-				{% else %}
-					<a href="{% url 'news:zapisg' pk=post.pk %}" class="post_link">ГРУППОВАЯ ЗАПИСЬ</a>/
-				{% endif %}
-				{% if b == post.eventdate %}
-				Нельзя отписаться<br>
-				{% elif post not in your_zapisi %}
-				<br>
-				{% else %}
-				<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
-				{% endif %}
-				{% if post in your_zapisi %}
-					Вы записаны<br>
-				{% endif %}
-				{% endif %}
+				{% for your_zapis in your_zapisi %}
+					{% if post.mesta == 0 %}
+						Нет мест<br>
+					{% else %}
+						{% if your_zapis in post.zapis.all %}
+							{% if b == post.eventdate %}
+								Нельзя отписаться<br>
+							{% else %}
+								{% if your_zapis.group == False %}
+									<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+								{% else %}
+									<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+								{% endif %}
+							{% endif %}
+						{% else %}
+							<a href="{% url 'news:zapis' pk=post.pk %}" class="post_link">ЗАПИСАТЬСЯ ЛИЧНО</a><br>
+							<a href="{% url 'news:zapisg' pk=post.pk %}" class="post_link">ГРУППОВАЯ ЗАПИСЬ</a><br>	
+						{% endif %}						
+						{% if your_zapis in post.zapis.all %}
+							Вы записаны<br>
+						{% endif %}
+					{% endif %}
+				{% endfor %}
 			{% else %}
 				Мероприятие прошло<br>
 			{% endif %}
 			{% if post.image %}
-				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
+				<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a><br>
 			{% endif %}
 			{% if post.video %}
 				<video src="{{ post.video.url }}" class="media" controls="controls"></video><br>
