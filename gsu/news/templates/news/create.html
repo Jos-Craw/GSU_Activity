@@ -2,10 +2,10 @@
 
 {% block title %}Add post{% endblock %}
 {% block content %}
-<div class="good">
+<div class="profile">
 	<form method="post" enctype="multipart/form-data">
 		{% csrf_token %}
-		{{ form.as_p }}
+		{{ form }}
 		<button type="submit">Add</button>
 	</form>
 </div>

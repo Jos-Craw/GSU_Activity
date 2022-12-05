@@ -85,27 +85,15 @@ class PostForm(ModelForm):
     class Meta:
         model = Post
         fields = '__all__'
-        widgets = {'author': forms.HiddenInput, 'zapisi':forms.HiddenInput}
+        widgets = {'author': forms.HiddenInput, 'zapis':forms.HiddenInput,'mesta_now':forms.HiddenInput}
 
 class TvorForm(forms.Form):
     Роль = forms.ChoiceField(choices=(("Артист", "Артист"), ("Организатор", "Организатор")))
 
 class VistForm(ModelForm):
-    # time = (
-    #      ('10:00','10:00'),
-    #      ('11:00','11:00'),
-    #      ('12:00','12:00'),
-    #      ('13:00','13:00'),
-    #      ('14:00','14:00'),
-    #      ('15:00','15:00'),
-    #      ('16:00','16:00'),
-    #     )
-    # eventdate = forms.DateField(widget=forms.SelectDateWidget)
-    # eventtime = forms.ChoiceField(choices=time)
-    # vist = forms.BooleanField(label='Выставка',initial=True,widget=forms.HiddenInput)
-    # tags = forms.CharField(initial='mass',widget=forms.HiddenInput)
-    # mesta = forms.IntegerField(initial=100,widget=forms.HiddenInput)
     class Meta:
         model = Vist
         fields = '__all__'
-        widgets = {'author': forms.HiddenInput}
+        widgets = {'author': forms.HiddenInput,'event': forms.HiddenInput}
+
+        

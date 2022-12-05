@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.dispatch import Signal
 from .utilities import send_activation_notification
 import os
-from django.core.validators import MinValueValidator
+from django.core.validators import MaxValueValidator , MinValueValidator
 
 
 class AdvUser(AbstractUser):
@@ -52,15 +52,6 @@ class Consult(models.Model):
         verbose_name = 'Консультация'
         ordering = ['eventdate']
 
-
-class Zapis(models.Model):
-    zap = models.ManyToManyField(AdvUser,blank=True,verbose_name='Записаные')
-    group = models.BooleanField(default=False, db_index=True,verbose_name='Групповая')
-
-    class Meta:
-        verbose_name_plural = 'Записи на события'
-        verbose_name = 'Запись на событие'
-
 class Post(models.Model):
     tag = (
         ('cult','Культурно-досуговая деятельность'),
@@ -80,9 +71,10 @@ class Post(models.Model):
     eventtime = models.TimeField(db_index=True,null=True,blank=False,verbose_name='Время')
     eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
     stoim = models.CharField(null = True, blank = False, max_length=10,verbose_name='Стоимость')
-    mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)],verbose_name='Количество мест') 
+    mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)],verbose_name='Количество мест всего') 
+    mesta_now = models.IntegerField(null = True, blank = False,default=2,validators=[MaxValueValidator(mesta)],verbose_name='Количество мест сейчас') 
     tags = models.CharField( blank = False,choices=tag, max_length=50,verbose_name='Тэг')
-    zapis = models.ManyToManyField(Zapis, related_name='Записаные',blank=True, verbose_name='Записаные')
+    zapis = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True, verbose_name='Записаные')
 
     class Meta:
         verbose_name_plural = 'События'
@@ -94,7 +86,16 @@ class Post(models.Model):
 
 
 class Event(models.Model):
-    eventtime = models.TimeField(db_index=True,null=True,blank=False,verbose_name='Время')
+    time = (
+         ('10:00','10:00'),
+         ('11:00','11:00'),
+         ('12:00','12:00'),
+         ('13:00','13:00'),
+         ('14:00','14:00'),
+         ('15:00','15:00'),
+         ('16:00','16:00'),
+        )
+    eventtime = models.TimeField(db_index=True,null=True,blank=False,verbose_name='Время',choices=time)
     eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
     zan = models.BooleanField(default=False, db_index=True,verbose_name='Занято')
     zapisi = models.ManyToManyField(AdvUser, related_name='Записи',blank=True,verbose_name='Записаные')

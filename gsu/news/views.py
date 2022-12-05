@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant, Vist, Event, Zapis
+from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant, Vist, Event
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -30,22 +30,21 @@ def index(request):
 
 @login_required
 def profile(request):
-    posts = Post.objects.all()
+    posts = Post.objects.filter(zapis=request.user.id)
     vists = Vist.objects.all()
-    zapisis = Zapis.objects.filter(zap=request.user.id)
     events = Event.objects.filter(zapisi=request.user.id)
     your_posts = Post.objects.filter(author=request.user.pk)
     a = date.today()
     b = a + timedelta(days=1)
-    return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b,'events':events,'zapisis':zapisis})
+    return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b,'events':events})
 
 @login_required
 def create(request):
     if request.method == 'POST' or request.FILES:
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save()
-            return redirect('news:index')
+        	post = form.save()
+        	return redirect('news:index')
     else:
         form = PostForm(initial={'author': request.user.pk})
     context = {'form': form}
@@ -70,7 +69,7 @@ def deletepost(request, pk):
 	messageSent = False
 	post = get_object_or_404(Post, pk=pk)
 	if request.method == 'POST':
-		for d in post.zapisi.all():
+		for d in post.zapis.all():
   			print(d.email)
   			useremail.append(d.email)
 		subject = 'ОТМЕНЯ МЕРОПРИЯТИЯ' 
@@ -85,7 +84,7 @@ def deletepost(request, pk):
 
 @login_required
 def detail(request, pk):
-	your_zapisi = Zapis.objects.filter(zap=request.user.id)
+	your_zapisi = Post.objects.filter(zapis=request.user.id)
 	messageSent = False
 	post = get_object_or_404(Post, pk=pk)
 	comments = Comment.objects.filter(post=pk,moderation=True)
@@ -141,7 +140,7 @@ def detail_v(request, pk):
 
 def cult(request):
     posts = Post.objects.all()
-    your_zapisi = Zapis.objects.filter(zap=request.user.id)
+    your_zapisi = Post.objects.filter(zapis=request.user.id)
     tvors = Tvor.objects.filter(otobr=True) 
     return render(request, 'news/cult.html', {'posts': posts,'your_zapisi':your_zapisi,'tvors':tvors})
 
@@ -166,21 +165,21 @@ def tvor(request,pk):
 def sport(request):
 	sections = Section.objects.filter(otobr=True)
 	posts = Post.objects.all()
-	your_zapisi = Zapis.objects.filter(zap=request.user.id)
+	your_zapisi = Post.objects.filter(zapis=request.user.id)
 	return render(request, 'news/sport.html', {'posts': posts,'your_zapisi':your_zapisi,'sections':sections})
 
 
 def mass(request):
 	posts = Post.objects.all()
 	vists = Vist.objects.all()
-	your_zapisi = Zapis.objects.filter(zap=request.user.id) 
+	your_zapisi = Post.objects.filter(zapis=request.user.id)
 	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'vists':vists})
 
 def trud(request):
     posts = Post.objects.all()
     truds = Trud.objects.filter(otobr=True)
     volonts = Volant.objects.filter(otobr=True)
-    your_zapisi = Zapis.objects.filter(zap=request.user.id) 
+    your_zapisi = Post.objects.filter(zapis=request.user.id)
     return render(request, 'news/trud.html', {'posts': posts,'your_zapisi':your_zapisi,'truds':truds,'volonts': volonts})
 
 def trud_naprav(request,pk):
@@ -368,8 +367,8 @@ def zapis(request, pk):
 			message = 'ЛИЧНАЯ ЗАПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email+' ' +request.user.group
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
-			post.zapisi.add(request.user.id)
-			post.mesta = post.mesta -1
+			post.zapis.add(request.user.id)
+			post.mesta = post.mesta_now -1
 			post.save()
 	else:
 		form = Subscribe()
@@ -395,11 +394,8 @@ def zapisg(request, pk):
 			message = 'ГРУППОВАЯ ЗАПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
-			for i in range(1,cd['colvo']+1):
-				post.zapisi.add(request.user.id)
-				post.save()
-				print(i)
-			post.mesta = post.mesta - cd['colvo']
+			post.zapis.add(request.user.id)
+			post.mesta = post.mesta_now - cd['colvo']
 			post.save()
 	else:
 		form = Subscribeg()
@@ -425,8 +421,8 @@ def otpis(request, pk):
 			message = 'ЛИЧНАЯ ОТПИСЬ: от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num + ' ' + request.user.email+ ' ' +request.user.group
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
-			post.zapisi.remove(request.user.id)
-			post.mesta = post.mesta +1
+			post.zapis.remove(request.user.id)
+			post.mesta = post.mesta_now +1
 			post.save()
 	else:
 		form = Subscribe()
@@ -452,8 +448,8 @@ def otpisg(request, pk):
 			message = 'ГРУППОВАЯ ОТПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
-			post.zapisi.remove(request.user.id)
-			post.mesta = post.mesta + cd['colvo']
+			post.zapis.remove(request.user.id)
+			post.mesta = post.mesta_now + cd['colvo']
 			post.save()
 	else:
 		form = Subscribeg()
