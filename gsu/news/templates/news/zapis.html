@@ -7,7 +7,6 @@
       <a href="{% url 'news:index' %}" class="link">Календарь мероприятий</a>
     </div>
     {% else %}
-    {{ vist.name}}
     <div class="container">
       <form method="post">
         {% csrf_token %} {{ form.as_p }}

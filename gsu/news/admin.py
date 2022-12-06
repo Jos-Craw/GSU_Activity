@@ -32,7 +32,7 @@ class EventAdmin(admin.ModelAdmin):
 admin.site.register(Event, EventAdmin)
 
 class PostTypeAdmin(admin.ModelAdmin):
-    list_display = ('id','post','user')
+    list_display = ('id','post','user','zap_type')
     search_fields = ('post','user')
     fields = ('post','user','zap_type')
 

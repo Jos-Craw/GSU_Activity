@@ -16,33 +16,29 @@
 			Цена: {{ post.stoim }}<br>
 			{% if a <  post.eventdate  %}
 				{% if post.mesta == 0 %}
-				Нет мест<br>
+					Нет мест<br>
 				{% else %}
-				{% if post in your_zapisi %}
-				{% else %}
-					<a href="{% url 'news:zapis' pk=post.pk %}" class="post_link">ЗАПИСАТЬСЯ ЛИЧНО</a>
-				{% endif %}
-				{% if b == post.eventdate %}
-				Нельзя отписаться<br>
-				{% elif post not in your_zapisi %}
-				<br>
-				{% else %}
-				<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-				{% endif %}
-				{% if post in your_zapisi %}
-				{% else %}
-					<a href="{% url 'news:zapisg' pk=post.pk %}" class="post_link">ГРУППОВАЯ ЗАПИСЬ</a>
-				{% endif %}
-				{% if b == post.eventdate %}
-				Нельзя отписаться<br>
-				{% elif post not in your_zapisi %}
-				<br>
-				{% else %}
-				<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
-				{% endif %}
-				{% if post in your_zapisi %}
-					Вы записаны<br>
-				{% endif %}
+					{% if post in your_zapisi %}
+						{% if b == post.eventdate %}
+							Нельзя отписаться<br>
+						{% else %}
+							{% for posttype in posttypes %}
+								{% if posttype.post_id == post.id%}
+									{% if posttype.zap_type == False %}
+										<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+									{% else %}
+										<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+									{% endif %}
+								{% endif %}	
+							{% endfor %}
+						{% endif %}
+					{% else %}
+						<a href="{% url 'news:zapis' pk=post.pk %}" class="post_link">ЗАПИСАТЬСЯ ЛИЧНО</a><br>
+						<a href="{% url 'news:zapisg' pk=post.pk  %}" class="post_link">ГРУППОВАЯ ЗАПИСЬ</a><br>
+					{% endif %}
+					{% if post in your_zapisi %}
+						Вы записаны<br>
+					{% endif %}
 				{% endif %}
 			{% else %}
 				Мероприятие прошло<br>

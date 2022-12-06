@@ -34,7 +34,7 @@
 		</div>
 		<div class="post-content">
 			{{ post.name}}<br>{{ post.eventtime }} {{ post.eventdate }}<br>
-			Количество свободных мест: {{ post.mesta }}<br>
+			Количество свободных мест: {{ post.mesta_now }}<br>
 			Цена: {{ post.stoim }}<br>
 			{% if user.is_authenticated %}
 				{% if post in your_zapisi %}

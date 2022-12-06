@@ -3,7 +3,7 @@ from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant,
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm,Subscribeg,TvorForm,VistForm
+from .forms import ChangeUserInfoForm, RegisterUserForm, CommentForm, Subscribe ,Index,NewConsult,zapis_consult, PostForm,UnSubscribeg,Subscribeg,TvorForm,VistForm,Subscribegv
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
@@ -45,6 +45,8 @@ def create(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
         	post = form.save()
+        	post.mesta_now = post.mesta
+        	post.save()
         	return redirect('news:index')
     else:
         form = PostForm(initial={'author': request.user.pk})
@@ -85,6 +87,7 @@ def deletepost(request, pk):
 
 @login_required
 def detail(request, pk):
+	posttypes = PostType.objects.filter(user=request.user.id)
 	your_zapisi = Post.objects.filter(zapis=request.user.id)
 	messageSent = False
 	post = get_object_or_404(Post, pk=pk)
@@ -108,7 +111,7 @@ def detail(request, pk):
 			message = 'Зайдите на сайт для одобрения комментария: '+cd['content'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ['novogencev.pavel@gmail.com']) #hodanovich@gsu.by, osnach@gsu.by
 			messageSent = True
-	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent,'your_zapisi':your_zapisi,'a':a,'b':b})
+	return render(request, 'news/detail.html', {'post': post, 'comments': comments, 'form': form,'messageSent': messageSent,'your_zapisi':your_zapisi,'a':a,'b':b,'posttypes':posttypes})
 
 @login_required
 def detail_v(request, pk):
@@ -396,8 +399,12 @@ def zapisg(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapis.add(request.user.id)
+			posttypes = PostType.objects.filter(user=request.user, post=post)
+			posttype = get_object_or_404(PostType,pk=posttypes[0].id)
+			posttype.zap_type = True
 			post.mesta_now = post.mesta_now - cd['colvo']
 			post.save()
+			posttype.save()
 	else:
 		form = Subscribeg()
 	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,})
@@ -433,7 +440,7 @@ def otpisg(request, pk):
 	post = get_object_or_404(Post, pk=pk)
 	messageSent = False
 	if request.method == 'POST':
-		form = Subscribeg(request.POST)
+		form = UnSubscribeg(request.POST)
 		if form.is_valid():
 			if post.tags == 'cult':
 				email = 'novogencev.pavel@gmail.com' #VELIKY@gsu.by
@@ -486,7 +493,7 @@ def zapisgv(request, pk1, pk2):
 	event = get_object_or_404(Event, pk=pk2)
 	messageSent = False
 	if request.method == 'POST':
-		form = Subscribeg(request.POST)
+		form = Subscribegv(request.POST)
 		if form.is_valid(): 
 			cd = form.cleaned_data
 			initial = {'vist': vist.pk}
@@ -501,7 +508,7 @@ def zapisgv(request, pk1, pk2):
 			event.save()
 			vist.save()
 	else:
-		form = Subscribeg()
+		form = Subscribegv()
 	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,'vist':vist,'event':event})
 
 def otpisv(request, pk1,pk2):
@@ -532,7 +539,7 @@ def otpisgv(request, pk1,pk2):
 	event = get_object_or_404(Event, pk=pk2)
 	messageSent = False
 	if request.method == 'POST':
-		form = Subscribeg(request.POST)
+		form = Subscribegv(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
 			initial = {'vist': vist.pk}
@@ -547,5 +554,5 @@ def otpisgv(request, pk1,pk2):
 			event.save()
 			vist.save()
 	else:
-		form = Subscribeg()
+		form = Subscribegv()
 	return render(request, 'news/otpis.html', {'form': form,'messageSent': messageSent,'vist':vist,'event':event})

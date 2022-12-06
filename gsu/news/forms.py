@@ -67,8 +67,14 @@ class Subscribe(forms.Form):
 
 class Subscribeg(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
-    colvo = forms.IntegerField(min_value=1, max_value=20)
-    
+    colvo = forms.IntegerField(min_value=1)
+
+class UnSubscribeg(forms.Form):
+    message = forms.CharField(widget=forms.Textarea)
+    colvo = forms.IntegerField(min_value=1)
+
+class Subscribegv(forms.Form):
+    message = forms.CharField(widget=forms.Textarea)
 
 class NewConsult(ModelForm):
     eventdate = forms.DateTimeField(widget=forms.SelectDateWidget)
@@ -81,7 +87,7 @@ class zapis_consult(forms.Form):
     pass
 
 class PostForm(ModelForm):
-    eventdate = forms.DateTimeField(widget=forms.SelectDateWidget)
+    eventdate = forms.DateTimeField(widget=forms.SelectDateWidget,label='Дата')
     class Meta:
         model = Post
         fields = '__all__'
