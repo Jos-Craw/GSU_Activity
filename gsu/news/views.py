@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant, Vist, Event
+from .models import Post, AdvUser, Comment, Consult,Section, Tvor ,Trud, Volant, Vist, Event, PostType
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -30,13 +30,14 @@ def index(request):
 
 @login_required
 def profile(request):
-    posts = Post.objects.filter(zapis=request.user.id)
-    vists = Vist.objects.all()
-    events = Event.objects.filter(zapisi=request.user.id)
-    your_posts = Post.objects.filter(author=request.user.pk)
-    a = date.today()
-    b = a + timedelta(days=1)
-    return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b,'events':events})
+	posttypes = PostType.objects.filter(user=request.user.id)
+	posts = Post.objects.filter(zapis=request.user.id)
+	vists = Vist.objects.all()
+	events = Event.objects.filter(zapisi=request.user.id)
+	your_posts = Post.objects.filter(author=request.user.pk)
+	a = date.today()
+	b = a + timedelta(days=1)
+	return render(request, 'news/profile.html', {'vists': vists,'posts': posts,'your_posts':your_posts,'a':a,'b':b,'events':events,'posttypes':posttypes})
 
 @login_required
 def create(request):
@@ -368,7 +369,7 @@ def zapis(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapis.add(request.user.id)
-			post.mesta = post.mesta_now -1
+			post.mesta_now = post.mesta_now -1
 			post.save()
 	else:
 		form = Subscribe()
@@ -395,7 +396,7 @@ def zapisg(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapis.add(request.user.id)
-			post.mesta = post.mesta_now - cd['colvo']
+			post.mesta_now = post.mesta_now - cd['colvo']
 			post.save()
 	else:
 		form = Subscribeg()
@@ -422,7 +423,7 @@ def otpis(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapis.remove(request.user.id)
-			post.mesta = post.mesta_now +1
+			post.mesta_now = post.mesta_now +1
 			post.save()
 	else:
 		form = Subscribe()
@@ -449,7 +450,7 @@ def otpisg(request, pk):
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
 			post.zapis.remove(request.user.id)
-			post.mesta = post.mesta_now + cd['colvo']
+			post.mesta_now = post.mesta_now + cd['colvo']
 			post.save()
 	else:
 		form = Subscribeg()

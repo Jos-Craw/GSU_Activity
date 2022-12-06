@@ -80,6 +80,7 @@
 				{% if a <  post.eventdate  %}
 					<div class="post">		
 						<div class="post-content">
+							
 							Дата публикации:<br>{{ post.pubdate|date:"d M Y H:i" }}<br>
 							{{ post.name}}<br>{{ post.content}}<br>{{ post.eventtime }} {{ post.eventdate }}<br>
 							Количество свободных мест: {{ post.mesta_now }}<br>
@@ -90,8 +91,15 @@
 							{% if b == post.eventdate %}
 								Нельзя отписаться<br>
 							{% else %}
-								<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
-								<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+								{% for posttype in posttypes %}
+									{% if posttype.post_id == post.id%}
+										{% if posttype.zap_type == False %}
+											<a href="{% url 'news:otpis' pk=post.pk %}" class="post_link">ОТПИСАТЬСЯ ЛИЧНО</a><br>
+										{% else %}
+											<a href="{% url 'news:otpisg' pk=post.pk %}" class="post_link">ОТПИСАТЬ ГРУППУ</a><br>
+										{% endif %}
+									{% endif %}	
+								{% endfor %}
 							{% endif %}
 						</div>
 					</div>

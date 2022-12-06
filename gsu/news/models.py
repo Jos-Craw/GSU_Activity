@@ -72,9 +72,12 @@ class Post(models.Model):
     eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
     stoim = models.CharField(null = True, blank = False, max_length=10,verbose_name='Стоимость')
     mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)],verbose_name='Количество мест всего') 
-    mesta_now = models.IntegerField(null = True, blank = False,default=2,validators=[MaxValueValidator(mesta)],verbose_name='Количество мест сейчас') 
-    tags = models.CharField( blank = False,choices=tag, max_length=50,verbose_name='Тэг')
-    zapis = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True, verbose_name='Записаные')
+    mesta_now = models.IntegerField(null = True, blank = False,default=2,validators=[MaxValueValidator(30)],verbose_name='Количество мест сейчас') 
+    tags = models.CharField( blank = False,choices=tag, max_length=50,verbose_name='Тэг',null=True)
+    zapis = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True, verbose_name='Записаные', through='PostType', through_fields=('post','user'))
+
+    def __str__(self):
+        return f'{self.name}'
 
     class Meta:
         verbose_name_plural = 'События'
@@ -84,26 +87,29 @@ class Post(models.Model):
     def filename(self):
         return os.path.basename(self.file.name)
 
+class PostType(models.Model):
+    user = models.ForeignKey(AdvUser,on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post,on_delete=models.CASCADE, null=True)
+    zap_type = models.BooleanField(default=False, db_index=True,verbose_name='Групповая запись') 
+
+    class Meta:
+        verbose_name_plural = 'Записи мероприятий'
+        verbose_name = 'Запись мероприяти'
 
 class Event(models.Model):
-    time = (
-         ('10:00','10:00'),
-         ('11:00','11:00'),
-         ('12:00','12:00'),
-         ('13:00','13:00'),
-         ('14:00','14:00'),
-         ('15:00','15:00'),
-         ('16:00','16:00'),
-        )
-    eventtime = models.TimeField(db_index=True,null=True,blank=False,verbose_name='Время',choices=time)
+    eventtime = models.TimeField(db_index=True,null=True,blank=False,verbose_name='Время')
     eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
     zan = models.BooleanField(default=False, db_index=True,verbose_name='Занято')
     zapisi = models.ManyToManyField(AdvUser, related_name='Записи',blank=True,verbose_name='Записаные')
     group = models.BooleanField(default=False, db_index=True,verbose_name='Групповая')
 
+    def __str__(self):
+        return f'{self.eventtime} {self.eventdate}'
+
     class Meta:
         verbose_name_plural = 'Время и дата выставки'
         verbose_name = 'Время и дата выставки'
+
 
 
 class Vist(models.Model):

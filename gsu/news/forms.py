@@ -95,5 +95,3 @@ class VistForm(ModelForm):
         model = Vist
         fields = '__all__'
         widgets = {'author': forms.HiddenInput,'event': forms.HiddenInput}
-
-        
