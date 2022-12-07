@@ -15,6 +15,14 @@
 {% if user.id == 4 or user.id == 1  %}
 		<a href="{% url 'news:add' %}"  class="link">Создать событие</a><br>
 {% endif %}
+<div class="calendar">
+	Выберите период времени
+	<form method="post">
+		{% csrf_token %}
+		<div>{{ form }}</div>
+		<button type="submit">Выбрать</button>
+	</form>
+</div>
 {% if posts %}
 {% for post in posts %}
 {% if post.tags == 'cult' %}

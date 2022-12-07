@@ -7,7 +7,14 @@
 		<a href="{% url 'news:add' %}"  class="link">Создать событие</a><br>
 		<a href="{% url 'news:add_v' %}"  class="link">Добавить выставку</a><br>
 {% endif %}
-
+<div class="calendar">
+	Выберите период времени
+	<form method="post">
+		{% csrf_token %}
+		<div>{{ form }}</div>
+		<button type="submit">Выбрать</button>
+	</form>
+</div>
 {% if vists %}
 {% for vist in vists %}
 	<div class="post">

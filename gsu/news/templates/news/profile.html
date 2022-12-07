@@ -23,31 +23,6 @@
 		<a href="{% url 'news:password_change' %}"  class="post_link">Изменить пароль</a><br>
 		<a href="{% url 'news:profile_delete' %}"  class="post_link">Удалить аккаунт</a><br>
 	</div>
-		{% if user.is_superuser == 1 %}
-		Созданые события:<br>
-			{% if your_posts %}
-			{% for post in your_posts %}
-				{% if a <  post.eventdate  %}
-				<div class="post">
-				<div class="post-content">
-					{{post.name }}<br>
-					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
-					{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
-					Количество свободных мест: {{ post.mesta_now }}<br>
-					Цена: {{ post.stoim }}<br>
-					{% if post.image %}
-						<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
-					{% endif %}
-						</div>
-						<div class="post-author-b">
-					<a href="{% url 'news:detail' pk=post.pk %}" class="post_link">Детали</a>
-				</div>		
-						
-					</div>
-					{% endif %}
-			{% endfor %}
-			{% endif %}
-			{% endif %}
 		Ваши записи:<br>		
 		{% if posts or events%}
 			{% for event in events %}
@@ -106,6 +81,30 @@
 			{% endfor %}
 		{% else %}
 			Записей нет
+		{% endif %}
+		{% if user.is_superuser == 1 %}
+		Созданые события:<br>
+			{% if your_posts %}
+				{% for post in your_posts %}
+					{% if a <  post.eventdate  %}
+						<div class="post">
+							<div class="post-content">
+								{{post.name }}<br>
+								Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
+								{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+								Количество свободных мест: {{ post.mesta_now }}<br>
+								Цена: {{ post.stoim }}<br>
+								{% if post.image %}
+									<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
+								{% endif %}
+							</div>
+							<div class="post-author-b">
+								<a href="{% url 'news:detail' pk=post.pk %}" class="post_link">Детали</a>
+							</div>		
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
 		{% endif %}
 </div>
 {% endblock %}

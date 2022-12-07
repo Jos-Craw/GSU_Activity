@@ -145,10 +145,19 @@ def detail_v(request, pk):
 
 
 def cult(request):
-    posts = Post.objects.all()
+    weekd=datetime.today().isocalendar()[1] 
+    posts = Post.objects.filter(eventdate__week=weekd)
     your_zapisi = Post.objects.filter(zapis=request.user.id)
-    tvors = Tvor.objects.filter(otobr=True) 
-    return render(request, 'news/cult.html', {'posts': posts,'your_zapisi':your_zapisi,'tvors':tvors})
+    tvors = Tvor.objects.filter(otobr=True)
+    if request.method == 'POST':
+    	form = Index(request.POST)
+    	if form.is_valid():
+    		nach = form.cleaned_data['Начало']
+    		con = form.cleaned_data['Конец']
+    		posts = Post.objects.filter(eventdate__range=(nach,con))
+    else:
+    	form = Index() 
+    return render(request, 'news/cult.html', {'posts': posts,'your_zapisi':your_zapisi,'tvors':tvors,'form':form})
 
 
 def tvor(request,pk):
@@ -170,23 +179,50 @@ def tvor(request,pk):
 
 def sport(request):
 	sections = Section.objects.filter(otobr=True)
-	posts = Post.objects.all()
+	weekd=datetime.today().isocalendar()[1] 
+	posts = Post.objects.filter(eventdate__week=weekd)
 	your_zapisi = Post.objects.filter(zapis=request.user.id)
-	return render(request, 'news/sport.html', {'posts': posts,'your_zapisi':your_zapisi,'sections':sections})
+	if request.method == 'POST':
+		form = Index(request.POST)
+		if form.is_valid():
+			nach = form.cleaned_data['Начало']
+			con = form.cleaned_data['Конец']
+			posts = Post.objects.filter(eventdate__range=(nach,con))
+	else:
+		form = Index()
+	return render(request, 'news/sport.html', {'posts': posts,'your_zapisi':your_zapisi,'sections':sections,'form':form})
 
 
 def mass(request):
-	posts = Post.objects.all()
+	weekd=datetime.today().isocalendar()[1] 
+	posts = Post.objects.filter(eventdate__week=weekd)
 	vists = Vist.objects.all()
 	your_zapisi = Post.objects.filter(zapis=request.user.id)
-	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'vists':vists})
+	if request.method == 'POST':
+		form = Index(request.POST)
+		if form.is_valid():
+			nach = form.cleaned_data['Начало']
+			con = form.cleaned_data['Конец']
+			posts = Post.objects.filter(eventdate__range=(nach,con))
+	else:
+		form = Index()
+	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'vists':vists,'form':form})
 
 def trud(request):
-    posts = Post.objects.all()
+    weekd=datetime.today().isocalendar()[1] 
+    posts = Post.objects.filter(eventdate__week=weekd)
     truds = Trud.objects.filter(otobr=True)
     volonts = Volant.objects.filter(otobr=True)
     your_zapisi = Post.objects.filter(zapis=request.user.id)
-    return render(request, 'news/trud.html', {'posts': posts,'your_zapisi':your_zapisi,'truds':truds,'volonts': volonts})
+    if request.method == 'POST':
+    	form = Index(request.POST)
+    	if form.is_valid():
+    		nach = form.cleaned_data['Начало']
+    		con = form.cleaned_data['Конец']
+    		posts = Post.objects.filter(eventdate__range=(nach,con))
+    else:
+    	form = Index()
+    return render(request, 'news/trud.html', {'posts': posts,'your_zapisi':your_zapisi,'truds':truds,'volonts': volonts,'form':form})
 
 def trud_naprav(request,pk):
 	trud = get_object_or_404(Trud, pk=pk)
