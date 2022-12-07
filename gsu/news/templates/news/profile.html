@@ -30,13 +30,14 @@
 				{% if a <  post.eventdate  %}
 				<div class="post">
 				<div class="post-content">
-							Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
-							{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
-							Количество свободных мест: {{ post.mesta_now }}<br>
-							Цена: {{ post.stoim }}<br>
-							{% if post.image %}
-								<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
-							{% endif %}
+					{{post.name }}<br>
+					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}<br>
+					{{ post.content}}  {{ post.eventtime }} {{ post.eventdate }}<br>
+					Количество свободных мест: {{ post.mesta_now }}<br>
+					Цена: {{ post.stoim }}<br>
+					{% if post.image %}
+						<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" class="media"></a>
+					{% endif %}
 						</div>
 						<div class="post-author-b">
 					<a href="{% url 'news:detail' pk=post.pk %}" class="post_link">Детали</a>
@@ -80,7 +81,6 @@
 				{% if a <  post.eventdate  %}
 					<div class="post">		
 						<div class="post-content">
-							Дата публикации:<br>{{ post.pubdate|date:"d M Y H:i" }}<br>
 							{{ post.name}}<br>{{ post.content}}<br>{{ post.eventtime }} {{ post.eventdate }}<br>
 							Количество свободных мест: {{ post.mesta_now }}<br>
 							Цена: {{ post.stoim }}<br>

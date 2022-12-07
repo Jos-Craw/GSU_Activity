@@ -72,7 +72,8 @@ class Post(models.Model):
     eventdate = models.DateField(db_index=True,null=True,blank=False,verbose_name='Дата')
     stoim = models.CharField(null = True, blank = False, max_length=10,verbose_name='Стоимость')
     mesta = models.IntegerField(null = True, blank = False,default=2,validators=[MinValueValidator(0)],verbose_name='Количество мест всего') 
-    mesta_now = models.IntegerField(null = True, blank = False,validators=[MaxValueValidator(100)],verbose_name='Количество мест сейчас') 
+    mesta_now = models.IntegerField(null = True, blank = False,verbose_name='Количество мест сейчас')
+    mest = models.IntegerField(null = True) 
     tags = models.CharField( blank = False,choices=tag, max_length=50,verbose_name='Тэг',null=True)
     zapis = models.ManyToManyField(AdvUser, related_name='Записаные',blank=True, verbose_name='Записаные', through='PostType', through_fields=('post','user'))
 
@@ -90,7 +91,8 @@ class Post(models.Model):
 class PostType(models.Model):
     user = models.ForeignKey(AdvUser,on_delete=models.CASCADE, null=True)
     post = models.ForeignKey(Post,on_delete=models.CASCADE, null=True)
-    zap_type = models.BooleanField(default=False, db_index=True,verbose_name='Групповая запись') 
+    zap_type = models.BooleanField(default=False, db_index=True,verbose_name='Групповая запись')
+    colvo= models.IntegerField(null = True,verbose_name='Количество занятых мест')
 
     class Meta:
         verbose_name_plural = 'Записи мероприятий'

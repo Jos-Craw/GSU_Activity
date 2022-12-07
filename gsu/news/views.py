@@ -14,6 +14,7 @@ from .utilities import signer
 from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime, timedelta, date
+from django.core.validators import MaxValueValidator , MinValueValidator
 
 def index(request):
 	weekd=datetime.today().isocalendar()[1] 
@@ -46,6 +47,7 @@ def create(request):
         if form.is_valid():
         	post = form.save()
         	post.mesta_now = post.mesta
+        	post.mest = post.mesta-post.mesta_now
         	post.save()
         	return redirect('news:index')
     else:
@@ -376,7 +378,7 @@ def zapis(request, pk):
 			post.save()
 	else:
 		form = Subscribe()
-	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent})
+	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,'post':post})
 
 def zapisg(request, pk):
 	post = get_object_or_404(Post, pk=pk)
@@ -402,12 +404,13 @@ def zapisg(request, pk):
 			posttypes = PostType.objects.filter(user=request.user, post=post)
 			posttype = get_object_or_404(PostType,pk=posttypes[0].id)
 			posttype.zap_type = True
+			posttype.colvo = cd['colvo']
 			post.mesta_now = post.mesta_now - cd['colvo']
 			post.save()
 			posttype.save()
 	else:
 		form = Subscribeg()
-	return render(request, 'news/zapis.html', {'form': form,'messageSent': messageSent,})
+	return render(request, 'news/zapisg.html', {'form': form,'messageSent': messageSent,'post':post})
 
 def otpis(request, pk):
 	post = get_object_or_404(Post, pk=pk)
@@ -434,11 +437,15 @@ def otpis(request, pk):
 			post.save()
 	else:
 		form = Subscribe()
-	return render(request, 'news/otpis.html', {'form': form,'messageSent': messageSent,})
+	return render(request, 'news/otpis.html', {'form': form,'messageSent': messageSent,'post':post})
 
 def otpisg(request, pk):
 	post = get_object_or_404(Post, pk=pk)
 	messageSent = False
+	post.mest = post.mesta-post.mesta_now
+	post.save()
+	posttypes = PostType.objects.filter(user=request.user, post=post)
+	posttype = get_object_or_404(PostType,pk=posttypes[0].id)
 	if request.method == 'POST':
 		form = UnSubscribeg(request.POST)
 		if form.is_valid():
@@ -456,12 +463,16 @@ def otpisg(request, pk):
 			message = 'ГРУППОВАЯ ОТПИСЬ: '+cd['message'] + ' от ' + request.user.first_name + ' ' +request.user.last_name + ' ' +request.user.phone_num+ ' ' + request.user.email
 			send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 			messageSent = True
-			post.zapis.remove(request.user.id)
+			if cd['colvo'] == posttype.colvo: 
+				post.zapis.remove(request.user.id)
+			elif cd['colvo'] < posttype.colvo :
+				posttype.colvo = posttype.colvo - cd['colvo']
+				posttype.save()
 			post.mesta_now = post.mesta_now + cd['colvo']
 			post.save()
 	else:
 		form = Subscribeg()
-	return render(request, 'news/otpis.html', {'form': form,'messageSent': messageSent,})
+	return render(request, 'news/otpisg.html', {'form': form,'messageSent': messageSent,'post':post,'posttype':posttype})
 
 
 def zapisv(request, pk1,pk2):

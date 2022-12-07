@@ -23,13 +23,13 @@
 			<div class="post-author-a">
 			    <div>
 					{% if post.tags == 'cult' %}
-					<a href="{% url 'news:cult' %}" class="link">{{ post.get_tags_display}}</a><br>
+					<a href="{% url 'news:cult' %}" class="post_link">{{ post.get_tags_display}}</a><br>
 					{% endif %}
 					Дата публикации: {{ post.pubdate|date:"d M Y H:i" }}
 				</div>
 			</div>
 			<div class="post-author-b">
-				<a href="{% url 'news:detail' pk=post.pk %}" class="link">⋮</a>
+				<a href="{% url 'news:detail' pk=post.pk %}" class="post_link">⋮</a>
 			</div>
 		</div>
 		<div class="post-content">
