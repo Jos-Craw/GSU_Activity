@@ -2,14 +2,14 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Deleting a user{% endblock %}
+{% block title %}Удалить аккаунт{% endblock %}
 
 {% block content %}
 <div class="delete">
-	Deleting a user {{object.username}}
+	Удалить аккаунт пользователя {{object.username}}
 	<form method="post">
 		{% csrf_token %}
-		<button type="submit">Delete</button>
+		<button type="submit" class="btn btn-danger">Удалить аккаунт</button>
 	</form>
 </div>
 {% endblock %}

@@ -11,8 +11,9 @@
 	<header>
 		<nav class="nav">
 			<div class="dropdown">
-				<a href="{% url 'news:index' %}"  class="link dropdtn">Календарь мероприятий</a>
+				<a class="link dropdtn">Календарь мероприятий</a>
 				<div class="dropdown-content">
+					<a href="{% url 'news:index' %}"  class="link dropdtn">Календарь мероприятий</a>
 					<a href="{% url 'news:cult' %}" class="link">Культурно-досуговая деятельность</a>
 					<a href="{% url 'news:sport' %}"  class="link">Спортивная деятельность</a>
 					<a href="{% url 'news:mass' %}" class="link">Массовые мероприятия и выставки</a>
@@ -23,7 +24,7 @@
 			<a href="{% url 'news:otz' %}"  class="link">Общие отзывы</a>
   		</nav>
   		<div class="logo ">
-  			<img src="\static\news\logo.svg"><a href="{% url 'news:index' %} " class="logo_link"><strong>GSU</strong>Activity</a>
+  			<img src="\static\news\logo.png" width="100px"><a href="{% url 'news:index' %} " class="logo_link"><strong>GSU</strong>Activity</a>
   		</div>
      	<div class="log">
      		{% if user.is_authenticated %}

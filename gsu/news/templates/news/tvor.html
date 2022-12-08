@@ -1,25 +1,23 @@
 {% extends "layout/basic.html" %}
 {% block content %}
 <div class="post">
-{% if messageSent %}
+  {% if messageSent %}
     <div class="container">
       <h3><strong>Заявка отправлена</strong></h3>
-      <a href="{% url 'news:index' %}" class="link">Календарь мероприятий</a>
+      <a href="{% url 'news:index' %}" class="post_link">Календарь мероприятий</a>
     </div>
-    {% else %}
+  {% else %}
     <div class="container">
       <form method="post">
-        {% csrf_token %} {{ form.as_p }}
-        <br/>
+        Запись на направление {{naprav.name}}
+        {% csrf_token %}
+        {{ form.as_p }}<br/>
         <div class="text-center">
           <input
-            type="submit"
-            class="btn btn-secondary"
-            value="Записаться"
-          />
+            type="submit" class="btn btn-secondary" value="Записаться"/>
         </div>
       </form>
     </div>
-    {% endif %}
+  {% endif %}
 </div>
 {% endblock %}

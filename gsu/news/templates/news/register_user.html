@@ -2,15 +2,15 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Registration{% endblock %}
+{% block title %}Регистрация пользователя{% endblock %}
 
 {% block content %}
 <div class="profile">
-	Registration
+	Регистрация пользователя
 	<form method="post" enctype="multipart/form-data">
 		{% csrf_token %}
-		{{ form }}
-		<button type="submit">Register</button>
+		{{ form.as_table }}
+		<button type="submit" class="btn btn-success">Зарегистрироваться</button>
 	</form>
 </div>
 {% endblock %}

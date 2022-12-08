@@ -174,7 +174,7 @@ def tvor(request,pk):
 			messageSent = True
 	else:
 		form = TvorForm
-	return render(request, 'news/tvor.html',{'form':form,'messageSent': messageSent})
+	return render(request, 'news/tvor.html',{'form':form,'messageSent': messageSent,'naprav':naprav})
 
 
 def sport(request):
@@ -196,7 +196,7 @@ def sport(request):
 def mass(request):
 	weekd=datetime.today().isocalendar()[1] 
 	posts = Post.objects.filter(eventdate__week=weekd)
-	vists = Vist.objects.all()
+	vists = Vist.objects.filter(final_date__week=weekd)
 	your_zapisi = Post.objects.filter(zapis=request.user.id)
 	if request.method == 'POST':
 		form = Index(request.POST)
@@ -204,6 +204,7 @@ def mass(request):
 			nach = form.cleaned_data['Начало']
 			con = form.cleaned_data['Конец']
 			posts = Post.objects.filter(eventdate__range=(nach,con))
+			vists = Vist.objects.filter(final_date__range=(nach,con))
 	else:
 		form = Index()
 	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'vists':vists,'form':form})

@@ -77,7 +77,7 @@ class Subscribegv(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
 
 class NewConsult(ModelForm):
-    eventdate = forms.DateTimeField(widget=forms.SelectDateWidget)
+    eventdate = forms.DateTimeField(widget=forms.SelectDateWidget,label='Дата')
     class Meta:
         model = Consult
         fields = '__all__'

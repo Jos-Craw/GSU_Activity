@@ -1,19 +1,12 @@
 {% extends "layout/basic.html" %}
 
-{% block title %}Delete post{% endblock %}
+{% block title %}Удалить мероприятие{% endblock %}
 {% block content %}
-<div class="good">
+<div class="profile">
 	Delete post
-	<div class="post">
 		<div class="post-author">
 			<div class="post-author-a">
-				{% if post.author.avatar %}
-			      <img class="avatar-small" src="{{ post.author.avatar.url }}">
-			    {% else %}
-			      <img class="avatar-small" src="\static\news\user.png">
-			    {% endif %}
 			    <div>
-					{{ post.author }}<br>
 					{{ post.pubdate|date:"d M Y H:i" }}
 				</div>
 			</div>
@@ -33,10 +26,9 @@
 				<a href='{{ post.file.url }}' target="-blank" class="file">{{post.filename}}</a><br>
 			{% endif %}
 		</div>
-	</div>
-	<form method="post">
+			<form method="post">
 	    {% csrf_token %}
-	    <button type="submit">Delete</button>
+	    <button type="submit"  class="btn btn-danger">Удалить</button>
 	</form>
 </div>
 {% endblock %}

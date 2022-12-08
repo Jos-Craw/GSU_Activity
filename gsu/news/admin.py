@@ -15,11 +15,11 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 
 class VistAdmin(admin.ModelAdmin):
-    list_display = ('id','name', 'content', 'author', 'pubdate', 'image','stoim', 'file', 'video', 'audio')
+    list_display = ('id','name', 'content', 'author', 'pubdate', 'image','stoim', 'file', 'video', 'audio','final_date')
     list_display_links = ('content','name',)
-    search_fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event')
+    search_fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event','final_date')
     date_hierarchy = 'pubdate'
-    fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event')
+    fields = ('name', 'content', 'author', 'image','stoim', 'file', 'video', 'audio','event','final_date')
 
 
 admin.site.register(Vist, VistAdmin)

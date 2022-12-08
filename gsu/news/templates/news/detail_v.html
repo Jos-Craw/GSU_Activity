@@ -25,9 +25,6 @@
 			{% if vist.file %}
 				<a href='{{ vist.file.url }}' target="-blank" class="file">{{vist.filename}}</a><br>
 			{% endif %}
-			{% if user.is_superuser == 1 %}
-				<a href="{% url 'news:delete_post' pk=vist.pk %}"  class="post_link">Delete</a>
-			{% endif %}
 			{% if user.is_authenticated %}
 			{% endif %}
 		</div>
@@ -65,7 +62,7 @@
 	<form method="post">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<button type="submit">Добавить отзыв</button>
+		<button type="submit" class="btn btn-success">Добавить отзыв</button>
 	</form><br>
 	{% if comments %}
 		{% for comment in comments %}
