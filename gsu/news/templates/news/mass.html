@@ -23,7 +23,8 @@
 				<div class="post-author-a">
 			    	<div>
 						Выставка <br>
-						Дата публикации: {{ vist.pubdate|date:"d M Y H:i" }}
+						Дата публикации: {{ vist.pubdate|date:"d M Y H:i" }}<br>
+						C {{ vist.start_date|date:"d M Y" }} ПО {{ vist.final_date|date:"d M Y" }}<br>
 					</div>
 				</div>
 				{% if user.is_authenticated %}

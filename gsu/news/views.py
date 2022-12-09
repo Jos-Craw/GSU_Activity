@@ -15,6 +15,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime, timedelta, date
 from django.core.validators import MaxValueValidator , MinValueValidator
+from django.db.models import Q
 
 def index(request):
 	weekd=datetime.today().isocalendar()[1] 
@@ -196,7 +197,7 @@ def sport(request):
 def mass(request):
 	weekd=datetime.today().isocalendar()[1] 
 	posts = Post.objects.filter(eventdate__week=weekd)
-	vists = Vist.objects.filter(final_date__week=weekd)
+	vists = Vist.objects.filter(start_date__week=weekd,final_date__week=weekd)
 	your_zapisi = Post.objects.filter(zapis=request.user.id)
 	if request.method == 'POST':
 		form = Index(request.POST)
@@ -204,7 +205,9 @@ def mass(request):
 			nach = form.cleaned_data['Начало']
 			con = form.cleaned_data['Конец']
 			posts = Post.objects.filter(eventdate__range=(nach,con))
-			vists = Vist.objects.filter(final_date__range=(nach,con))
+			vists = Vist.objects.filter(
+				Q(start_date__range=(nach,con))|
+				Q( final_date__range=(nach,con)))
 	else:
 		form = Index()
 	return render(request, 'news/mass.html', {'posts': posts,'your_zapisi':your_zapisi,'vists':vists,'form':form})

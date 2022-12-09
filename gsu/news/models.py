@@ -125,7 +125,8 @@ class Vist(models.Model):
     pubdate = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата публикации')
     stoim = models.CharField(null = True, blank = False, max_length=10,verbose_name='Стоимость')
     event = models.ManyToManyField(Event,related_name='Даты',blank=True,verbose_name='Время и дата')
-    final_date = models.DateField(db_index=True,null=True,blank=False,verbose_name='Крайняя дата')
+    final_date = models.DateField(db_index=True,null=True,blank=False,verbose_name='Конец выставки')
+    start_date = models.DateField(db_index=True,null=True,blank=False,verbose_name='Начало выставки')
 
     class Meta:
         verbose_name_plural = 'Выставки'

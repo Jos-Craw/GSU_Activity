@@ -91,6 +91,9 @@ header{
   margin: -8px;
   font-size: 30px;
 }
+.logot{
+    width: 100px;
+  }
 button,
 [type=button],
 [type=reset],
@@ -682,7 +685,65 @@ input {
 	display: block;
 }
 
-
+@media (max-width: 1800px){
+  header{
+  display: flex;
+  justify-content: space-between;
+  background: #2961BC;
+  align-items: center;
+  margin-top: 0px;
+  padding-right:8px; 
+  padding-left:8px;
+} 
+  .logo{
+  display: flex;
+  align-items: center;
+  font-size: 50px;
+  justify-content: center;
+}
+  .nav{
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 30px;
+  justify-content: space-between;
+}
+  .log{
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  justify-content: center;
+}
+  .logot{
+    width: 70px;
+  }
+}
+  
+@media(max-width: 1366px){
+  .post{
+    width: 95%;
+    font-size:30px;
+  }
+  .calendar{
+    width: 95%;
+  }
+  .profile{
+    width: 95%;
+  }
+    .nav{
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 20px;
+  justify-content: space-between;
+}
+  .log{
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  justify-content: center;
+}
+}
 @media (max-width: 1050px){
   header{
   display: flex;
@@ -727,35 +788,4 @@ input {
   .profile{
     width: 95%;
   }
-}
-
-@media (max-width: 1800px){
-  header{
-  display: flex;
-  justify-content: space-between;
-  background: #2961BC;
-  align-items: center;
-  margin: -8px;
-} 
-  .logo{
-  display: flex;
-  align-items: center;
-  font-size: 50px;
-  width: 100%;
-  justify-content: center;
-}
-  .nav{
-  display: flex;
-  align-items: center;
-  text-align: center;
-  font-size: 30px;
-  width: 100%;
-  justify-content: space-between;
-}
-  .log{
-  display: flex;
-  align-items: center;
-  font-size: 30px;
-  width: 100%;
-  justify-content: center;
 }
