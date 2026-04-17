@@ -25,5 +25,5 @@
 Редизайн интерфейса и добавление темной темы. 
 
 ---
-[cite_start]**Разработчик:** Павел Новоженцев
-[cite_start]**Контакты:** [LinkedIn](https://www.linkedin.com/in/pavelnovozhentsev-bbf227220/) | novogencev.pavel@gmail.com
+**Разработчик:** Павел Новоженцев
+**Контакты:** [LinkedIn](https://www.linkedin.com/in/pavelnovozhentsev-bbf227220/) | novogencev.pavel@gmail.com
